@@ -9,25 +9,29 @@ export default class LoginPage extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    name = "";
+
     axios
-      .post("http://localhost:8080/api/users/register", {
+      .post("http://localhost:8080/api/users/login", {
         username: event.target.username.value,
-        email: event.target.email.value,
         password: event.target.password.value,
       })
-      .then(() => {
-        this.setState({ success: true, error: "" });
-        event.target.reset();
+      .then((response) => {
+        sessionStorage.setItem("token", response.data.token);
+        this.setState({ success: true });
       })
       .catch((error) => {
-        this.setState({ success: false, error: error.response.data });
+        this.setState({ error: error.response.data });
       });
   };
 
   render() {
     return (
-      <div className={styles.container}>
+      <div
+        onSubmit={(e) => {
+          this.handleSubmit(e);
+        }}
+        className={styles.container}
+      >
         <section className={styles.home}>
           <h1 className={styles.home__heading}> Welcome to the QuanderDome</h1>
           <form className={styles.sign_in_form}>
@@ -48,7 +52,8 @@ export default class LoginPage extends Component {
             </button>
             <span className={styles.sign_up}>
               {" "}
-              Not an existing user? please click <a>here</a> to sign up
+              Not an existing user? please click{" "}
+              <a className={styles.link}>here</a> to sign up
             </span>
           </form>
         </section>
