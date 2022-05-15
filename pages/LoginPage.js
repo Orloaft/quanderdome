@@ -1,5 +1,5 @@
 import { Component } from "react";
-import styles from "../styles/Home.module.scss";
+import styles from "../styles/LoginPage.module.scss";
 import Link from "next/link";
 
 export default class LoginPage extends Component {
@@ -12,7 +12,7 @@ export default class LoginPage extends Component {
     event.preventDefault();
 
     axios
-      .post("http://localhost:8080/api/users/login", {
+      .post("http://localhost:8080/users/login", {
         username: event.target.username.value,
         password: event.target.password.value,
       })
@@ -27,15 +27,15 @@ export default class LoginPage extends Component {
 
   render() {
     return (
-      <div
-        onSubmit={(e) => {
-          this.handleSubmit(e);
-        }}
-        className={styles.container}
-      >
+      <div className={styles.container}>
         <section className={styles.home}>
           <h1 className={styles.home__heading}> Welcome to the QuanderDome</h1>
-          <form className={styles.sign_in_form}>
+          <form
+            onSubmit={(e) => {
+              this.handleSubmit(e);
+            }}
+            className={styles.sign_in_form}
+          >
             <input
               className={styles.sign_in_form__field}
               name="username"

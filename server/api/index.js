@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import knex from "knex";
 
 /* CREATE new user */
-router.post("/register", (req, res) => {
+router.post("/users/register", (req, res) => {
   const { username, email, password } = req.body;
 
   // If any fields are missing, return
@@ -32,7 +32,7 @@ router.post("/register", (req, res) => {
 });
 
 /* LOGIN user */
-router.post("/login", (req, res) => {
+router.post("/users/login", (req, res) => {
   const { email, password } = req.body;
 
   // If any fields are missing, return

@@ -1,0 +1,56 @@
+.container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #898980;
+}
+.home {
+  display: flex;
+  flex-direction: column;
+  height: 75%;
+  width: 75%;
+  align-items: center;
+  border-radius: 0.75rem;
+  background-color: #a9b2ac;
+  &__heading {
+    color: #def2c8;
+  }
+}
+.sign_in_form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #bcd0c7;
+  height: 70%;
+  width: 70%;
+  border-radius: 0.75rem;
+
+  &__field {
+    border-style: none;
+    border-radius: 0.75rem;
+    width: 50%;
+    height: 3rem;
+    margin-bottom: 1rem;
+  }
+  &__submit {
+    border-style: none;
+    background-color: #a9b2ac;
+    width: 50%;
+    height: 3rem;
+    border-radius: 0.75rem;
+    color: #def2c8;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+}
+.sign_up {
+  margin-top: 3rem;
+}
+.link {
+  &__text {
+    color: brown;
+    cursor: pointer;
+  }
+}
