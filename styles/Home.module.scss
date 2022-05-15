@@ -48,6 +48,8 @@
   margin-top: 3rem;
 }
 .link {
-  text-decoration: none;
-  color: brown;
+  &__text {
+    color: brown;
+    cursor: pointer;
+  }
 }

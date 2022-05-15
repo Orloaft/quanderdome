@@ -1,5 +1,6 @@
 import { Component } from "react";
 import styles from "../styles/Home.module.scss";
+import Link from "next/link";
 
 export default class LoginPage extends Component {
   state = {
@@ -53,7 +54,10 @@ export default class LoginPage extends Component {
             <span className={styles.sign_up}>
               {" "}
               Not an existing user? please click{" "}
-              <a className={styles.link}>here</a> to sign up
+              <Link href="/SignupPage" className={styles.link}>
+                <span className={styles.link__text}>here</span>
+              </Link>{" "}
+              to sign up
             </span>
           </form>
         </section>
