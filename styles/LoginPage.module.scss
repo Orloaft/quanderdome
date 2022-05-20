@@ -1,28 +1,35 @@
+@use "./partials/fonts" as *;
+
 .container {
+  font-family: odibee;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #898980;
+  background-color: #171717;
 }
 .home {
+  border: 2px solid #def2c8;
+
   display: flex;
   flex-direction: column;
   height: 75%;
   width: 75%;
   align-items: center;
   border-radius: 0.75rem;
-  background-color: #a9b2ac;
+  background-color: #171717;
   &__heading {
+    font-size: 4rem;
     color: #def2c8;
   }
 }
 .sign_in_form {
+  border: 2px solid #def2c8;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #bcd0c7;
+  background-color: #171717;
   height: 70%;
   width: 70%;
   border-radius: 0.75rem;
