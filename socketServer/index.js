@@ -68,13 +68,14 @@ io.on("connection", (socket) => {
   });
   socket.on("question_answered", async (room, socketId) => {
     roundCount++;
-    console.log("correct answer from " + socketId);
+
     io.to(room).emit("round_end", roundCount);
   });
   socket.on("last_question_answered", async (room) => {
     io.to(room).emit("game_end");
   });
   socket.on("submit_answer", (answer, room, socketId) => {
+    console.log("answer received from " + socketId);
     io.to(room).emit("submit_answer_response", answer, socketId);
   });
 });

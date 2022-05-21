@@ -1,6 +1,6 @@
 import styles from "./GameRoom.module.scss";
 import socketService from "../../services/socketService";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 export const GameRoom = ({ gameRound, endRound, roomId }) => {
@@ -17,30 +17,32 @@ export const GameRoom = ({ gameRound, endRound, roomId }) => {
       socketService.socket.id
     );
   };
-  socketService.socket.on("tick", (time) => {
-    setTime(time);
-  });
-  socketService.socket.on("round_end", (round) => {
-    setQuestion(gameRound[round]);
-  });
-  socketService.socket.once("submit_answer_response", (answer, socketId) => {
-    console.log("response received");
-    if (
-      answer === question.correct_answer &&
-      socketService.socket.id === socketId
-    ) {
-      socketService.socket.emit(
-        "question_answered",
-        roomId,
-        socketService.socket.id
-      );
-    } else {
-      const newAnswers = [...answers];
-      newAnswers.push(answer);
-      setAnswers(newAnswers);
-    }
-  });
 
+  useEffect(() => {
+    socketService.socket.on("tick", (time) => {
+      setTime(time);
+    });
+    socketService.socket.on("round_end", (round) => {
+      setQuestion(gameRound[round]);
+    });
+    socketService.socket.on("submit_answer_response", (answer, socketId) => {
+      console.log("response received");
+      if (
+        answer === question.correct_answer &&
+        socketService.socket.id === socketId
+      ) {
+        socketService.socket.emit(
+          "question_answered",
+          roomId,
+          socketService.socket.id
+        );
+      } else {
+        const newAnswers = [...answers];
+        newAnswers.push(answer);
+        setAnswers(newAnswers);
+      }
+    });
+  }, []);
   return (
     <>
       <h1 className={styles.time}>{time}</h1>
