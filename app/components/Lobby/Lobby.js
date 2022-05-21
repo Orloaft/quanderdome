@@ -2,7 +2,7 @@ import styles from "./Lobby.module.scss";
 import socketService from "../../services/socketService";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-
+import { GameConfig } from "../GameConfig/GameConfig";
 export const Lobby = ({ roomId, leaveLobby }) => {
   const [chat, setChat] = useState([]);
 
@@ -59,6 +59,7 @@ export const Lobby = ({ roomId, leaveLobby }) => {
             return <li key={uuidv4()}>{msg.id + " says: " + msg.body}</li>;
           })}
         </ul>
+        <GameConfig />
       </section>
     </>
   );

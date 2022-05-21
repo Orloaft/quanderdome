@@ -8,8 +8,8 @@ export default function Dashboard() {
   socketService.connect("http://localhost:9000");
   return (
     <div className={styles.container}>
-      <section className={styles.home}>
-        <h1 className={styles.home__heading}> QuanderDome</h1>
+      <h1 className={styles.dashboard__heading}> QuanderDome</h1>
+      <section className={styles.dashboard}>
         {/* <span>signed in as {user}</span> */}
         {/* <button onClick={signOut}>Sign out</button> */}
         <LobbyList />
