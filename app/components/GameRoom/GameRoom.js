@@ -5,19 +5,35 @@ import { v4 as uuidv4 } from "uuid";
 
 export const GameRoom = ({ gameRound, endRound, roomId }) => {
   const [time, setTime] = useState(null);
-  const question = gameRound[0];
+  const [question, setQuestion] = useState(gameRound[0]);
   const [answers, setAnswers] = useState([]);
+  const round = gameRound.indexOf(question);
 
   const submitAnswer = (answer, roomId) => {
-    socketService.socket.emit("wrong_answer", answer, roomId);
+    socketService.socket.emit(
+      "submit_answer",
+      answer,
+      roomId,
+      socketService.socket.id
+    );
   };
   socketService.socket.on("tick", (time) => {
     setTime(time);
   });
-  socketService.socket.on("wrong_answer_response", (answer) => {
-    if (answer === question.correct_answer) {
-      socketService.socket.emit("question_answered", roomId);
-      endRound();
+  socketService.socket.on("round_end", (round) => {
+    setQuestion(gameRound[round]);
+  });
+  socketService.socket.once("submit_answer_response", (answer, socketId) => {
+    console.log("response received");
+    if (
+      answer === question.correct_answer &&
+      socketService.socket.id === socketId
+    ) {
+      socketService.socket.emit(
+        "question_answered",
+        roomId,
+        socketService.socket.id
+      );
     } else {
       const newAnswers = [...answers];
       newAnswers.push(answer);

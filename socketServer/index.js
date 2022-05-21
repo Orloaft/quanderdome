@@ -9,6 +9,7 @@ const io = require("socket.io")(http, {
 });
 const port = process.env.PORT || 9000;
 const roundTimer = require("./services/gameService");
+let roundCount = 0;
 app.use(cors());
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
@@ -54,27 +55,27 @@ io.on("connection", (socket) => {
     socket.leave(room);
   });
   socket.on("trivia_request", async (gameConfig, room) => {
-    // config = JSON.stringify(gameConfig);
-    console.log(
-      `https://opentdb.com/api.php?amount=${gameConfig.range}&category=${gameConfig.category}&difficulty=${gameConfig.difficulty}&type=multiple`
-    );
     axios
       .get(
         `https://opentdb.com/api.php?amount=${gameConfig.range}&category=${gameConfig.category}&difficulty=${gameConfig.difficulty}&type=multiple`
       )
       .then((result) => {
         io.to(room).emit("trivia_response", result.data.results);
-        console.log(result.data);
       })
       .then(() => {
         roundTimer(io, room);
       });
   });
-  socket.on("question_answered", async (room) => {
-    io.to(room).emit("round_end");
+  socket.on("question_answered", async (room, socketId) => {
+    roundCount++;
+    console.log("correct answer from " + socketId);
+    io.to(room).emit("round_end", roundCount);
   });
-  socket.on("wrong_answer", (answer, room) => {
-    io.to(room).emit("wrong_answer_response", answer);
+  socket.on("last_question_answered", async (room) => {
+    io.to(room).emit("game_end");
+  });
+  socket.on("submit_answer", (answer, room, socketId) => {
+    io.to(room).emit("submit_answer_response", answer, socketId);
   });
 });
 

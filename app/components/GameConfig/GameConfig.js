@@ -7,7 +7,7 @@ import socketService from "../../services/socketService";
 export const GameConfig = ({ roomId }) => {
   const [questionRange, setQuestionRange] = useState("1");
   const [questionDifficulty, setQuestionDifficulty] = useState("easy");
-  const [questionCategory, setQuestionCategory] = useState("General Knowledge");
+  const [questionCategory, setQuestionCategory] = useState("9");
 
   const handleDifficultyChange = (e) => {
     e.preventDefault();

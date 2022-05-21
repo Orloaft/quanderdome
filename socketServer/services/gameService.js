@@ -23,7 +23,7 @@ const roundTimer = (io, room) => {
 
     // If the count down is finished, write some text
     if (distance < 0) {
-      io.to(room).emit("round_end");
+      io.to(room).emit("game_end");
       clearInterval(x);
     }
   }, 1000);

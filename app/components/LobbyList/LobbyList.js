@@ -39,10 +39,9 @@ export const LobbyList = () => {
     setRoomList(list);
   });
   socketService.socket.on("trivia_response", (trivia) => {
-    console.log(trivia);
     setGameRound(trivia);
   });
-  socketService.socket.on("round_end", () => {
+  socketService.socket.on("game_end", () => {
     setGameRound(null);
     setRoomId(null);
   });
