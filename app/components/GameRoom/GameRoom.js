@@ -3,7 +3,7 @@ import socketService from "../../services/socketService";
 import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-export const GameRoom = ({ gameRound, endRound, roomId }) => {
+export const GameRoom = ({ gameRound, endGame, roomId }) => {
   const [time, setTime] = useState(null);
   const [question, setQuestion] = useState(gameRound[0]);
   const [answers, setAnswers] = useState([]);
@@ -26,16 +26,19 @@ export const GameRoom = ({ gameRound, endRound, roomId }) => {
       setQuestion(gameRound[round]);
     });
     socketService.socket.on("submit_answer_response", (answer, socketId) => {
-      console.log("response received");
       if (
         answer === question.correct_answer &&
         socketService.socket.id === socketId
       ) {
-        socketService.socket.emit(
-          "question_answered",
-          roomId,
-          socketService.socket.id
-        );
+        if (question === gameRound[gameRound.length - 1]) {
+          socketService.socket.emit("last_question_answered", roomId);
+        } else {
+          socketService.socket.emit(
+            "question_answered",
+            roomId,
+            socketService.socket.id
+          );
+        }
       } else {
         const newAnswers = [...answers];
         newAnswers.push(answer);

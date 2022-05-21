@@ -11,7 +11,7 @@ export const LobbyList = () => {
   const [roomId, setRoomId] = useState(null);
   const [gameRound, setGameRound] = useState(null);
 
-  const endRound = () => {
+  const endGame = () => {
     leaveLobby();
     setGameRound(null);
   };
@@ -89,7 +89,7 @@ export const LobbyList = () => {
         </>
       )) ||
         (gameRound ? (
-          <GameRoom gameRound={gameRound} endRound={endRound} roomId={roomId} />
+          <GameRoom gameRound={gameRound} endGame={endGame} roomId={roomId} />
         ) : (
           <Lobby leaveLobby={leaveLobby} roomId={roomId} />
         ))}
