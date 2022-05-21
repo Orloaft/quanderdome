@@ -36,7 +36,7 @@ export const LobbyList = () => {
               joinRoom(e);
             }}
           >
-            <span> create room</span>
+            <span> Create room</span>
             <input type="text" name="roomInput"></input>
             <button type="submit" disabled={joining}>
               {joining ? "Creating..." : "Create"}
@@ -63,7 +63,7 @@ export const LobbyList = () => {
             </ul>
           </section>
         </>
-      )) || <Lobby room={roomId} />}
+      )) || <Lobby roomId={roomId} />}
     </>
   );
 };

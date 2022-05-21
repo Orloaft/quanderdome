@@ -4,6 +4,8 @@
   box-sizing: border-box;
 }
 //margin reset on body element
+html,
 body {
   margin: 0;
+  height: 100%;
 }

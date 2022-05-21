@@ -1,5 +1,5 @@
 import { Component } from "react";
-import styles from "../styles/LoginPage.module.scss";
+// import styles from "../styles/LoginPage.module.scss";
 import Link from "next/link";
 import { signIn, getSession } from "next-auth/react";
 

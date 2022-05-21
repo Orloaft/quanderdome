@@ -23,4 +23,7 @@
   display: flex;
   flex-direction: column;
   color: #def2c8;
+  & span {
+    font-size: 2rem;
+  }
 }

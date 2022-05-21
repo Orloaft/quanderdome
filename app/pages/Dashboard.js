@@ -1,5 +1,5 @@
 import { signOut } from "next-auth/react";
-import styles from "../styles/LoginPage.module.scss";
+import styles from "../styles/Dashboard.module.scss";
 import { useSession } from "next-auth/react";
 import socketService from "../services/socketService";
 import { LobbyList } from "../components/LobbyList/LobbyList";
