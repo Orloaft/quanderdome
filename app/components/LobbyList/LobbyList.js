@@ -7,7 +7,9 @@ export const LobbyList = () => {
   const [roomList, setRoomList] = useState([]);
   const [joining, setJoining] = useState(false);
   const [roomId, setRoomId] = useState(null);
-
+  const leaveLobby = () => {
+    setRoomId(null);
+  };
   async function joinRoom(e) {
     e.preventDefault();
 
@@ -37,7 +39,7 @@ export const LobbyList = () => {
             }}
           >
             <span> Create room</span>
-            <input type="text" name="roomInput"></input>
+            <input type="text" name="roomInput" autoComplete="off"></input>
             <button type="submit" disabled={joining}>
               {joining ? "Creating..." : "Create"}
             </button>
@@ -63,7 +65,7 @@ export const LobbyList = () => {
             </ul>
           </section>
         </>
-      )) || <Lobby roomId={roomId} />}
+      )) || <Lobby leaveLobby={leaveLobby} roomId={roomId} />}
     </>
   );
 };
