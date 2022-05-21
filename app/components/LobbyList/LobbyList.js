@@ -12,10 +12,12 @@ export const LobbyList = () => {
   const [gameRound, setGameRound] = useState(null);
 
   const endRound = () => {
+    leaveLobby();
     setGameRound(null);
   };
 
   const leaveLobby = () => {
+    socketService.socket.emit("leave_room", roomId);
     setRoomId(null);
   };
   async function joinRoom(e) {
@@ -37,6 +39,7 @@ export const LobbyList = () => {
     setRoomList(list);
   });
   socketService.socket.on("trivia_response", (trivia) => {
+    console.log(trivia);
     setGameRound(trivia);
   });
   socketService.socket.on("round_end", () => {
@@ -87,7 +90,7 @@ export const LobbyList = () => {
         </>
       )) ||
         (gameRound ? (
-          <GameRoom gameRound={gameRound} endRound={endRound} />
+          <GameRoom gameRound={gameRound} endRound={endRound} roomId={roomId} />
         ) : (
           <Lobby leaveLobby={leaveLobby} roomId={roomId} />
         ))}

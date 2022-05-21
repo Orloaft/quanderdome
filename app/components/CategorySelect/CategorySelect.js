@@ -6,7 +6,6 @@ export const CategorySelect = ({ handleChange }) => {
           handleChange(e);
         }}
         name="category"
-        value=""
       >
         <option value="9">General Knowledge</option>
         <option value="10">Entertainment: Books</option>

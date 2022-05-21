@@ -54,21 +54,24 @@ io.on("connection", (socket) => {
     socket.leave(room);
   });
   socket.on("trivia_request", async (gameConfig, room) => {
-    console.log(gameConfig);
+    // config = JSON.stringify(gameConfig);
+    console.log(
+      `https://opentdb.com/api.php?amount=${gameConfig.range}&category=${gameConfig.category}&difficulty=${gameConfig.difficulty}&type=multiple`
+    );
     axios
       .get(
         `https://opentdb.com/api.php?amount=${gameConfig.range}&category=${gameConfig.category}&difficulty=${gameConfig.difficulty}&type=multiple`
       )
       .then((result) => {
         io.to(room).emit("trivia_response", result.data.results);
+        console.log(result.data);
       })
       .then(() => {
         roundTimer(io, room);
       });
   });
   socket.on("question_answered", async (room) => {
-    const trivia = await axios.get("https://opentdb.com/api.php?amount=1");
-    io.to(room).emit("trivia_response", trivia.data.results[0]);
+    io.to(room).emit("round_end");
   });
   socket.on("wrong_answer", (answer, room) => {
     io.to(room).emit("wrong_answer_response", answer);

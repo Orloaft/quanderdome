@@ -2,3 +2,16 @@
   color: aliceblue;
   font-size: 4rem;
 }
+
+.question {
+  font-size: 2rem;
+  display: flex;
+  color: aliceblue;
+  flex-direction: column;
+}
+.answer {
+  background-color: #fafafa;
+}
+.answered {
+  background-color: crimson;
+}
