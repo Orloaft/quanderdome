@@ -6,6 +6,7 @@ import { LobbyList } from "../components/LobbyList/LobbyList";
 
 export default function Dashboard() {
   socketService.connect("http://localhost:9000");
+
   return (
     <div className={styles.container}>
       <h1 className={styles.dashboard__heading}> QuanderDome</h1>

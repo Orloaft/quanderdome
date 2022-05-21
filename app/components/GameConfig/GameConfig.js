@@ -2,7 +2,9 @@ import styles from "./GameConfig.module.scss";
 import { CategorySelect } from "../CategorySelect/CategorySelect";
 import { DifficultySelect } from "../DifficultySelect/DifficultySelect";
 import { useState } from "react";
-export const GameConfig = () => {
+import socketService from "../../services/socketService";
+
+export const GameConfig = ({ roomId }) => {
   const [questionRange, setQuestionRange] = useState("1");
   const [questionDifficulty, setQuestionDifficulty] = useState("easy");
   const [questionCategory, setQuestionCategory] = useState("General Knowledge");
@@ -27,7 +29,7 @@ export const GameConfig = () => {
       category: questionCategory,
       difficulty: questionDifficulty,
     };
-    console.log(gameConfig);
+    socketService.socket.emit("trivia_request", gameConfig, roomId);
   };
   return (
     <>

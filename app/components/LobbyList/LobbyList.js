@@ -3,10 +3,18 @@ import socketService from "../../services/socketService";
 import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Lobby } from "../Lobby/Lobby";
+import { GameRoom } from "../GameRoom/GameRoom";
+
 export const LobbyList = () => {
   const [roomList, setRoomList] = useState([]);
   const [joining, setJoining] = useState(false);
   const [roomId, setRoomId] = useState(null);
+  const [gameRound, setGameRound] = useState(null);
+
+  const endRound = () => {
+    setGameRound(null);
+  };
+
   const leaveLobby = () => {
     setRoomId(null);
   };
@@ -27,6 +35,13 @@ export const LobbyList = () => {
   }
   socketService.socket.on("room_list", (list) => {
     setRoomList(list);
+  });
+  socketService.socket.on("trivia_response", (trivia) => {
+    setGameRound(trivia);
+  });
+  socketService.socket.on("round_end", () => {
+    setGameRound(null);
+    setRoomId(null);
   });
   return (
     <>
@@ -70,7 +85,12 @@ export const LobbyList = () => {
             </ul>
           </section>
         </>
-      )) || <Lobby leaveLobby={leaveLobby} roomId={roomId} />}
+      )) ||
+        (gameRound ? (
+          <GameRoom gameRound={gameRound} endRound={endRound} />
+        ) : (
+          <Lobby leaveLobby={leaveLobby} roomId={roomId} />
+        ))}
     </>
   );
 };

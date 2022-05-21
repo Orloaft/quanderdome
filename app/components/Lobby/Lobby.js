@@ -55,7 +55,7 @@ export const Lobby = ({ roomId, leaveLobby }) => {
           </form>
         </div>
         <div className={styles.chat__container}>
-          <GameConfig />
+          <GameConfig roomId={roomId} />
           <button
             className={styles.button}
             onClick={() => {

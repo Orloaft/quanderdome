@@ -8,6 +8,7 @@ const io = require("socket.io")(http, {
   },
 });
 const port = process.env.PORT || 9000;
+const roundTimer = require("./services/gameService");
 app.use(cors());
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
@@ -52,9 +53,18 @@ io.on("connection", (socket) => {
   socket.on("leave_room", (room) => {
     socket.leave(room);
   });
-  socket.on("trivia_request", async (room) => {
-    const trivia = await axios.get("https://opentdb.com/api.php?amount=1");
-    io.to(room).emit("trivia_response", trivia.data.results[0]);
+  socket.on("trivia_request", async (gameConfig, room) => {
+    console.log(gameConfig);
+    axios
+      .get(
+        `https://opentdb.com/api.php?amount=${gameConfig.range}&category=${gameConfig.category}&difficulty=${gameConfig.difficulty}&type=multiple`
+      )
+      .then((result) => {
+        io.to(room).emit("trivia_response", result.data.results);
+      })
+      .then(() => {
+        roundTimer(io, room);
+      });
   });
   socket.on("question_answered", async (room) => {
     const trivia = await axios.get("https://opentdb.com/api.php?amount=1");
