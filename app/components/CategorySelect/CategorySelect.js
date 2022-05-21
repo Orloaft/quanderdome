@@ -1,7 +1,13 @@
-export const CategorySelect = () => {
+export const CategorySelect = ({ handleChange }) => {
   return (
     <>
-      <select name="category">
+      <select
+        onChange={(e) => {
+          handleChange(e);
+        }}
+        name="category"
+        value=""
+      >
         <option value="General Knowledge">General Knowledge</option>
         <option value="Entertainment: Books">Entertainment: Books</option>
         <option value="Entertainment: Film">Entertainment: Film</option>

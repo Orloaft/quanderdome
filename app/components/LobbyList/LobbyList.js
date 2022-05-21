@@ -39,8 +39,13 @@ export const LobbyList = () => {
             }}
           >
             <span> Create room</span>
-            <input type="text" name="roomInput" autoComplete="off"></input>
-            <button type="submit" disabled={joining}>
+            <input
+              className={styles.input}
+              type="text"
+              name="roomInput"
+              autoComplete="off"
+            ></input>
+            <button className={styles.button} type="submit" disabled={joining}>
               {joining ? "Creating..." : "Create"}
             </button>
           </form>

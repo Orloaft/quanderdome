@@ -27,24 +27,37 @@ export const Lobby = ({ roomId, leaveLobby }) => {
   return (
     <>
       <section className={styles.chat}>
-        <form
-          className={styles.chat__form}
-          onSubmit={(e) => {
-            messageSubmit(e);
-          }}
-        >
-          <span className={styles.chat__label}> send a message</span>
-          <input
-            className={styles.chat__input}
-            type="text"
-            name="message"
-            autoComplete="off"
-          ></input>
-          <button className={styles.chat__submit} type="submit">
-            send
-          </button>
-
+        <div className={styles.chat__container}>
+          <label className={styles.chat__box_label} htmlFor="chat">
+            Chat
+          </label>
+          <ul className={styles.chat__box} name="chat">
+            {chat.map((msg) => {
+              return <li key={uuidv4()}>{msg.id + " says: " + msg.body}</li>;
+            })}
+          </ul>
+          <form
+            className={styles.chat__form}
+            onSubmit={(e) => {
+              messageSubmit(e);
+            }}
+          >
+            <span className={styles.chat__label}> Send a message</span>
+            <input
+              className={styles.input}
+              type="text"
+              name="message"
+              autoComplete="off"
+            ></input>
+            <button className={styles.button} type="submit">
+              Send
+            </button>
+          </form>
+        </div>
+        <div className={styles.chat__container}>
+          <GameConfig />
           <button
+            className={styles.button}
             onClick={() => {
               socketService.socket.emit("leave_room", roomId);
               setChat([]);
@@ -53,13 +66,7 @@ export const Lobby = ({ roomId, leaveLobby }) => {
           >
             Leave lobby
           </button>
-        </form>
-        <ul className={styles.chat__box}>
-          {chat.map((msg) => {
-            return <li key={uuidv4()}>{msg.id + " says: " + msg.body}</li>;
-          })}
-        </ul>
-        <GameConfig />
+        </div>
       </section>
     </>
   );

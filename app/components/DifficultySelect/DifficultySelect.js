@@ -1,7 +1,12 @@
-export const DifficultySelect = () => {
+export const DifficultySelect = ({ handleChange }) => {
   return (
     <>
-      <select name="difficulty">
+      <select
+        onChange={(e) => {
+          handleChange(e);
+        }}
+        name="difficulty"
+      >
         <option value="easy">easy</option>
         <option value="medium">medium</option>
         <option value="hard">hard</option>

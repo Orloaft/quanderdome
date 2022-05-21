@@ -27,3 +27,23 @@
     font-size: 2rem;
   }
 }
+.button {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  color: #def2c8;
+  border-style: none;
+  background-color: transparent;
+  border-radius: 1rem;
+  border: 2px solid #def2c8;
+  &:hover {
+    background-color: #def2c8;
+    color: black;
+    border: 2px solid black;
+  }
+}
+.input {
+  background-color: transparent;
+  border: 2px solid #def2c8;
+  font-size: 1rem;
+  color: #def2c8;
+}
