@@ -3,7 +3,7 @@ import socketService from "../../services/socketService";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { GameConfig } from "../GameConfig/GameConfig";
-export const Lobby = ({ roomId, leaveLobby }) => {
+export const Lobby = ({ roomId, leaveLobby, gameStart }) => {
   const [chat, setChat] = useState([]);
 
   async function messageSubmit(e) {
@@ -55,7 +55,7 @@ export const Lobby = ({ roomId, leaveLobby }) => {
           </form>
         </div>
         <div className={styles.chat__container}>
-          <GameConfig roomId={roomId} />
+          <GameConfig roomId={roomId} gameStart={gameStart} />
           <button
             className={styles.button}
             onClick={() => {

@@ -3,8 +3,9 @@ import { CategorySelect } from "../CategorySelect/CategorySelect";
 import { DifficultySelect } from "../DifficultySelect/DifficultySelect";
 import { useState } from "react";
 import socketService from "../../services/socketService";
+import gameService from "../../services/gameService";
 
-export const GameConfig = ({ roomId }) => {
+export const GameConfig = ({ roomId, gameStart }) => {
   const [questionRange, setQuestionRange] = useState("1");
   const [questionDifficulty, setQuestionDifficulty] = useState("easy");
   const [questionCategory, setQuestionCategory] = useState("9");
@@ -29,7 +30,8 @@ export const GameConfig = ({ roomId }) => {
       category: questionCategory,
       difficulty: questionDifficulty,
     };
-    socketService.socket.emit("trivia_request", gameConfig, roomId);
+    console.log(gameConfig);
+    gameStart(gameConfig);
   };
   return (
     <>

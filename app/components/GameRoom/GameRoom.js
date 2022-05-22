@@ -2,14 +2,9 @@ import styles from "./GameRoom.module.scss";
 import socketService from "../../services/socketService";
 import { useState, useEffect } from "react";
 import { QuestionComponent } from "../QuestionComponent/QuestionComponent";
+import gameService from "../../services/gameService";
 
-export const GameRoom = ({
-  question,
-  leaveLobby,
-  roomId,
-  answers,
-  correct,
-}) => {
+export const GameRoom = ({ question, leaveLobby, roomId, correct }) => {
   const [time, setTime] = useState(null);
 
   const submitAnswer = (answer, roomId) => {
@@ -37,7 +32,6 @@ export const GameRoom = ({
       {question && (
         <QuestionComponent
           submitAnswer={submitAnswer}
-          answers={answers}
           question={question}
           roomId={roomId}
           correct={correct}

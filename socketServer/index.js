@@ -9,8 +9,10 @@ const io = require("socket.io")(http, {
 });
 const port = process.env.PORT || 9000;
 const roundTimer = require("./services/gameService");
-const clearTimer = require("./services/gameService");
 let roundCount = 0;
+let submittedAnswers = [];
+let correct_answer = null;
+let questionArray = [];
 app.use(cors());
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
@@ -40,14 +42,15 @@ function makeid(length) {
 
 io.on("connection", (socket) => {
   console.log("connected with socket " + socket.id);
-  socket.emit("room_list", getActiveRooms(io));
-  socket.on("public_message", function (msg) {
-    socket.emit("chat_message", msg);
+
+  socket.on("show_rooms", (socketId) => {
+    io.to(socketId).emit("show_rooms_response", getActiveRooms(io));
+    console.log("showing rooms:" + getActiveRooms(io));
   });
   socket.on("join_room", function (roomId) {
     socket.join(roomId);
     socket.emit("room_joined", roomId);
-    socket.emit("room_list", getActiveRooms(io));
+    console.log("joined room: " + roomId);
   });
   socket.on("room_message", (roomId, msg) => {
     io.to(roomId).emit("room_message_received", msg);
@@ -55,29 +58,45 @@ io.on("connection", (socket) => {
   socket.on("leave_room", (room) => {
     socket.leave(room);
     socket.emit("leave_room_response");
+    console.log("leaving room: " + room);
   });
-  socket.on("trivia_request", async (gameConfig, room) => {
+  socket.on("game_start", async (gameConfig, room, socketId) => {
     axios
       .get(
         `https://opentdb.com/api.php?amount=${gameConfig.range}&category=${gameConfig.category}&difficulty=${gameConfig.difficulty}&type=multiple`
       )
       .then((result) => {
-        io.to(room).emit("trivia_response", result.data.results);
+        io.to(room).emit("game_start_response", result.data.results, socketId);
+        questionArray = result.data.results;
+        correct_answer = questionArray[roundCount].correct_answer;
       })
       .then(() => {
         roundTimer(io, room);
       });
   });
-  socket.on("question_answered", (room, socketId) => {
+  socket.on("round_end", (room, socketId) => {
     roundCount++;
     console.log("correct answer from " + socketId);
-    io.to(room).emit("round_end", roundCount);
+    submittedAnswers = [];
+    io.to(room).emit("round_end_response", questionArray[roundCount], socketId);
   });
-  socket.on("timer_off", (roomId) => {
-    clearTimer(roomId);
-  });
+
   socket.on("submit_answer", (answer, room, socketId) => {
-    io.to(room).emit("submit_answer_response", answer, socketId);
+    submittedAnswers.push(answer);
+    if (answer === correct_answer) {
+      roundCount++;
+      console.log("correct answer from " + socketId);
+      submittedAnswers = [];
+      if (questionArray.length === roundCount) {
+        io.to(room).emit("game_end");
+        roundCount = 0;
+      } else {
+        console.log("ending round");
+        correct_answer = questionArray[roundCount].correct_answer;
+        io.to(room).emit("round_end_response", questionArray[roundCount]);
+      }
+    }
+    io.to(room).emit("submit_answer_response", submittedAnswers);
   });
   socket.on("last_question_answered", (room) => {
     io.to(room).emit("game_end");

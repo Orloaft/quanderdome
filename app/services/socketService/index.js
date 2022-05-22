@@ -20,6 +20,14 @@ class SocketService {
       });
     });
   }
+  async showRooms() {
+    return new Promise((rs, rj) => {
+      this.socket.emit("show_rooms", this.socket.id);
+      this.socket.on("show_rooms_response", (rooms) => {
+        rs(rooms);
+      });
+    });
+  }
   async joinGameRoom(socket, roomId) {
     return new Promise((rs, rj) => {
       const data = { room: roomId, socket: socket };

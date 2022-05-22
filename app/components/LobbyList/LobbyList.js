@@ -1,9 +1,10 @@
 import styles from "./LobbyList.module.scss";
 import socketService from "../../services/socketService";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Lobby } from "../Lobby/Lobby";
 import { GameRoom } from "../GameRoom/GameRoom";
+import gameService from "../../services/gameService";
 
 export const LobbyList = () => {
   const [roomList, setRoomList] = useState([]);
@@ -13,9 +14,22 @@ export const LobbyList = () => {
   const [question, setQuestion] = useState(null);
   const [answers, setAnswers] = useState([]);
 
+  async function gameStart(config) {
+    gameService
+      .startGame(config, roomId, socketService.socket.id)
+      .then((question) => {
+        setQuestion(question);
+      });
+  }
+
   const leaveLobby = () => {
     socketService.socket.emit("leave_room", roomId);
   };
+  async function refresh() {
+    socketService.showRooms().then((rooms) => {
+      setRoomList(rooms);
+    });
+  }
   async function joinRoom(e) {
     e.preventDefault();
     setJoining(true);
@@ -34,25 +48,25 @@ export const LobbyList = () => {
     });
   }
   useEffect(() => {
+    socketService.socket.on("game_start_response", (questions, socketId) => {
+      if (socketService.socket.id !== socketId) {
+        // gameService.questionArray = questions;
+        gameService.question = questions[0];
+        setQuestion(gameService.question);
+      }
+    });
+    socketService.socket.on("round_end_response", (question) => {
+      console.log("ending round");
+      setQuestion(question);
+    });
     socketService.socket.on("leave_room_response", () => {
+      setRoomId(null);
       socketService.socket.emit("timer_off", roomId);
     });
-    socketService.socket.on("trivia_response", (trivia) => {
-      gameRound = trivia;
-      setQuestion(gameRound[0]);
-    });
-    socketService.socket.on("round_end", (round) => {
-      console.log("ending round");
-      setQuestion(gameRound[round]);
-    });
+
     socketService.socket.on("game_end", () => {
       setQuestion(null);
       setRoomId(null);
-    });
-    socketService.socket.on("submit_answer_response", (answer, socketId) => {
-      const newAnswers = [...answers];
-      newAnswers.push(answer);
-      setAnswers(newAnswers);
     });
   }, []);
 
@@ -96,6 +110,14 @@ export const LobbyList = () => {
                 );
               })}
             </ul>
+            <button
+              onClick={() => {
+                refresh();
+              }}
+              className={styles.button}
+            >
+              Show rooms
+            </button>
           </section>
         </>
       )) ||
@@ -105,10 +127,14 @@ export const LobbyList = () => {
             correct={question.correct_answer}
             leaveLobby={leaveLobby}
             roomId={roomId}
-            asnwers={answers}
+            answers={answers}
           />
         ) : (
-          <Lobby leaveLobby={leaveLobby} roomId={roomId} />
+          <Lobby
+            leaveLobby={leaveLobby}
+            roomId={roomId}
+            gameStart={gameStart}
+          />
         ))}
     </>
   );
