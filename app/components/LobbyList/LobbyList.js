@@ -9,19 +9,16 @@ export const LobbyList = () => {
   const [roomList, setRoomList] = useState([]);
   const [joining, setJoining] = useState(false);
   const [roomId, setRoomId] = useState(null);
-  const [gameRound, setGameRound] = useState(null);
-
-  const endGame = () => {
-    leaveLobby();
-    setGameRound(null);
-  };
+  const gameRound = null;
+  const [question, setQuestion] = useState(null);
+  const [answers, setAnswers] = useState([]);
 
   const leaveLobby = () => {
     socketService.socket.emit("leave_room", roomId);
-    setRoomId(null);
   };
   async function joinRoom(e) {
     e.preventDefault();
+    setJoining(true);
 
     return new Promise((rs, rj) => {
       socketService.joinGameRoom(
@@ -33,18 +30,32 @@ export const LobbyList = () => {
       rs();
     }).then(() => {
       e.target.roomInput.value = "";
+      setJoining(false);
     });
   }
-  socketService.socket.on("room_list", (list) => {
-    setRoomList(list);
-  });
-  socketService.socket.on("trivia_response", (trivia) => {
-    setGameRound(trivia);
-  });
-  socketService.socket.on("game_end", () => {
-    setGameRound(null);
-    setRoomId(null);
-  });
+  useEffect(() => {
+    socketService.socket.on("leave_room_response", () => {
+      socketService.socket.emit("timer_off", roomId);
+    });
+    socketService.socket.on("trivia_response", (trivia) => {
+      gameRound = trivia;
+      setQuestion(gameRound[0]);
+    });
+    socketService.socket.on("round_end", (round) => {
+      console.log("ending round");
+      setQuestion(gameRound[round]);
+    });
+    socketService.socket.on("game_end", () => {
+      setQuestion(null);
+      setRoomId(null);
+    });
+    socketService.socket.on("submit_answer_response", (answer, socketId) => {
+      const newAnswers = [...answers];
+      newAnswers.push(answer);
+      setAnswers(newAnswers);
+    });
+  }, []);
+
   return (
     <>
       {(!roomId && (
@@ -88,8 +99,14 @@ export const LobbyList = () => {
           </section>
         </>
       )) ||
-        (gameRound ? (
-          <GameRoom gameRound={gameRound} endGame={endGame} roomId={roomId} />
+        (question ? (
+          <GameRoom
+            question={question}
+            correct={question.correct_answer}
+            leaveLobby={leaveLobby}
+            roomId={roomId}
+            asnwers={answers}
+          />
         ) : (
           <Lobby leaveLobby={leaveLobby} roomId={roomId} />
         ))}

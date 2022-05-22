@@ -1,3 +1,7 @@
+let roomsWithTimer = [];
+const clearTimer = (roomId) => {
+  roomsWithTimer.push(roomId);
+};
 const roundTimer = (io, room) => {
   // Set the date we're counting down to
   const countDownDate = new Date().getTime() + 60000;
@@ -17,7 +21,9 @@ const roundTimer = (io, room) => {
     );
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
+    if (roomsWithTimer.includes(room)) {
+      clearInterval(x);
+    }
     // Display the result in the element with id="demo"
     io.to(room).emit("tick", seconds);
 
@@ -29,3 +35,4 @@ const roundTimer = (io, room) => {
   }, 1000);
 };
 module.exports = roundTimer;
+module.exports = clearTimer;

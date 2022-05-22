@@ -9,6 +9,7 @@ const io = require("socket.io")(http, {
 });
 const port = process.env.PORT || 9000;
 const roundTimer = require("./services/gameService");
+const clearTimer = require("./services/gameService");
 let roundCount = 0;
 app.use(cors());
 app.get("/", (req, res) => {
@@ -53,6 +54,7 @@ io.on("connection", (socket) => {
   });
   socket.on("leave_room", (room) => {
     socket.leave(room);
+    socket.emit("leave_room_response");
   });
   socket.on("trivia_request", async (gameConfig, room) => {
     axios
@@ -66,17 +68,20 @@ io.on("connection", (socket) => {
         roundTimer(io, room);
       });
   });
-  socket.on("question_answered", async (room, socketId) => {
+  socket.on("question_answered", (room, socketId) => {
     roundCount++;
-
+    console.log("correct answer from " + socketId);
     io.to(room).emit("round_end", roundCount);
   });
-  socket.on("last_question_answered", async (room) => {
-    io.to(room).emit("game_end");
+  socket.on("timer_off", (roomId) => {
+    clearTimer(roomId);
   });
   socket.on("submit_answer", (answer, room, socketId) => {
-    console.log("answer received from " + socketId);
     io.to(room).emit("submit_answer_response", answer, socketId);
+  });
+  socket.on("last_question_answered", (room) => {
+    io.to(room).emit("game_end");
+    roundCount = 0;
   });
 });
 
