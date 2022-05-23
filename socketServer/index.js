@@ -93,21 +93,6 @@ io.on("connection", (socket) => {
         roundTimer(io, room);
       });
   });
-  // socket.on("round_end", (room, socketId) => {
-  //   const game = fetchGameInstance(room);
-  //   game.roundCount += 1;
-  //   //shuffle possible answers to make them unpredictable
-  //   const shuffled = [
-  //     ...game.questionArray[game.roundCount].incorrect_answers,
-  //     game.questionArray[game.roundCount].correct_answer,
-  //   ].sort(() => Math.random() - 0.5);
-  //   game.chosenAnswers = [];
-  //   io.to(room).emit(
-  //     "round_end_response",
-  //     game.questionArray[game.roundCount],
-  //     shuffled
-  //   );
-  // });
 
   socket.on("submit_answer", (answer, room) => {
     let game = fetchGameInstance(room);

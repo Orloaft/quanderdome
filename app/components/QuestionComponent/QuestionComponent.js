@@ -30,7 +30,7 @@ export const QuestionComponent = ({
             return (
               <button
                 className={
-                  !options.includes(answer) ? styles.answered : styles.answer
+                  answers.includes(answer) ? styles.answered : styles.answer
                 }
                 key={uuidv4()}
                 onClick={() => {

@@ -9,6 +9,7 @@ export const GameConfig = ({ roomId, gameStart }) => {
   const [questionRange, setQuestionRange] = useState("1");
   const [questionDifficulty, setQuestionDifficulty] = useState("easy");
   const [questionCategory, setQuestionCategory] = useState("9");
+  const [roundTime, setRoundTime] = useState(0);
 
   const handleDifficultyChange = (e) => {
     e.preventDefault();
@@ -18,7 +19,10 @@ export const GameConfig = ({ roomId, gameStart }) => {
     e.preventDefault();
     setQuestionCategory(e.target.value);
   };
-
+  const handleTimeChange = (e) => {
+    e.preventDefault();
+    setRoundTime(e.target.value);
+  };
   const handleRangeChange = (e) => {
     e.preventDefault();
     setQuestionRange(e.target.value);
@@ -29,6 +33,7 @@ export const GameConfig = ({ roomId, gameStart }) => {
       range: questionRange,
       category: questionCategory,
       difficulty: questionDifficulty,
+      time: roundTime,
     };
     console.log(gameConfig);
     gameStart(gameConfig);
@@ -43,6 +48,17 @@ export const GameConfig = ({ roomId, gameStart }) => {
           }}
           className={styles.config__form}
         >
+          <label htmlFor="time">{roundTime} Time</label>
+          <input
+            className={styles.input}
+            onChange={(e) => {
+              handleRangeChange(e);
+            }}
+            name="time"
+            type="range"
+            min="0"
+            max="600"
+          ></input>
           <label htmlFor="range">{questionRange} Questions</label>
           <input
             className={styles.input}
