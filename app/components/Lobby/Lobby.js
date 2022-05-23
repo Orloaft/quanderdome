@@ -54,7 +54,11 @@ export const Lobby = ({ roomId, leaveLobby, gameStart }) => {
             </button>
           </form>
         </div>
-        <div className={styles.chat__container}>
+        <div
+          className={
+            styles.chat__container + " " + styles.chat__container_config
+          }
+        >
           <GameConfig roomId={roomId} gameStart={gameStart} />
           <button
             className={styles.button}

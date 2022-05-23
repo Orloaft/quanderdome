@@ -1,6 +1,9 @@
 .time {
   color: aliceblue;
-  font-size: 4rem;
+  font-size: 2rem;
+  @media (min-width: 48rem) {
+    font-size: 4rem;
+  }
 }
 
 .question {
