@@ -75,7 +75,9 @@ io.on("connection", (socket) => {
       .then((result) => {
         let newGame = new GameService();
         newGame.roomId = room;
-        newGame.players = io.sockets.adapter.rooms.get(room);
+        newGame.players = io.sockets.adapter.rooms.get(room).map((player) => {
+          return { id: player, life: 100 };
+        });
         newGame.questionArray = result.data.results;
         newGame.roundCount = 0;
         io.to(room).emit("game_start_response", newGame, socketId);
@@ -107,12 +109,9 @@ io.on("connection", (socket) => {
           game.questionArray[game.roundCount]
         );
       }
+    } else {
+      io.to(room).emit("submit_answer_response", game.chosenAnswers);
     }
-    io.to(room).emit("submit_answer_response", submittedAnswers);
-  });
-  socket.on("last_question_answered", (room) => {
-    io.to(room).emit("game_end");
-    roundCount = 0;
   });
 });
 

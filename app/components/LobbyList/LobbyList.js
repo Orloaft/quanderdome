@@ -56,8 +56,9 @@ export const LobbyList = () => {
     });
 
     socketService.socket.on("game_end", () => {
-      setQuestion(null);
-      setRoomId(null);
+      setQuestion(false);
+      setRoomId(false);
+      refresh();
     });
   }, []);
 
