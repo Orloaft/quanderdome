@@ -6,11 +6,7 @@ import gameService from "../../services/gameService";
 
 export const QuestionComponent = ({ question, submitAnswer, roomId }) => {
   const [answers, setAnswers] = useState([]);
-  const answerArr = [
-    ...question.incorrect_answers,
-    question.correct_answer,
-  ].sort((a, b) => 0.5 - Math.random());
-
+  const answerArr = [...question.incorrect_answers, question.correct_answer];
   useEffect(() => {
     socketService.socket.on("submit_answer_response", (answers) => {
       setAnswers(answers);

@@ -8,11 +8,15 @@ const io = require("socket.io")(http, {
   },
 });
 const port = process.env.PORT || 9000;
-const roundTimer = require("./services/gameService");
+const roundTimer = require("./services/roundTimer");
+const GameService = require("./services/gameService");
 let roundCount = 0;
 let submittedAnswers = [];
 let correct_answer = null;
 let questionArray = [];
+
+const gameInstances = [];
+
 app.use(cors());
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
@@ -39,7 +43,9 @@ function makeid(length) {
   }
   return result;
 }
-
+const fetchGameInstance = (roomId) => {
+  return gameInstances.find((instance) => instance.roomId === roomId);
+};
 io.on("connection", (socket) => {
   console.log("connected with socket " + socket.id);
 
@@ -66,9 +72,13 @@ io.on("connection", (socket) => {
         `https://opentdb.com/api.php?amount=${gameConfig.range}&category=${gameConfig.category}&difficulty=${gameConfig.difficulty}&type=multiple`
       )
       .then((result) => {
-        io.to(room).emit("game_start_response", result.data.results, socketId);
-        questionArray = result.data.results;
-        correct_answer = questionArray[roundCount].correct_answer;
+        let newGame = new GameService();
+        newGame.roomId = room;
+        newGame.players = io.sockets.adapter.rooms.get(room);
+        newGame.questionArray = result.data.results;
+        newGame.roundCount = 0;
+        io.to(room).emit("game_start_response", newGame, socketId);
+        gameInstances.push(newGame);
       })
       .then(() => {
         roundTimer(io, room);
