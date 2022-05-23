@@ -75,7 +75,8 @@ io.on("connection", (socket) => {
       .then((result) => {
         let newGame = new GameService();
         newGame.roomId = room;
-        newGame.players = io.sockets.adapter.rooms.get(room).map((player) => {
+        const players = [...io.sockets.adapter.rooms.get(room)];
+        newGame.players = players.map((player) => {
           return { id: player, life: 100 };
         });
         newGame.questionArray = result.data.results;
