@@ -4,9 +4,8 @@ import { useState, useEffect } from "react";
 import { QuestionComponent } from "../QuestionComponent/QuestionComponent";
 import gameService from "../../services/gameService";
 
-export const GameRoom = ({ question, leaveLobby, roomId, correct }) => {
+export const GameRoom = ({ question, leaveLobby, roomId, options }) => {
   const [time, setTime] = useState(null);
-
   const submitAnswer = (answer, roomId) => {
     console.log("answer sent");
     socketService.socket.emit(
@@ -34,7 +33,7 @@ export const GameRoom = ({ question, leaveLobby, roomId, correct }) => {
           submitAnswer={submitAnswer}
           question={question}
           roomId={roomId}
-          correct={correct}
+          options={options}
         />
       )}
     </>

@@ -81,33 +81,55 @@ io.on("connection", (socket) => {
         });
         newGame.questionArray = result.data.results;
         newGame.roundCount = 0;
-        io.to(room).emit("game_start_response", newGame, socketId);
+        const shuffled = [
+          ...newGame.questionArray[newGame.roundCount].incorrect_answers,
+          newGame.questionArray[newGame.roundCount].correct_answer,
+        ].sort(() => Math.random() - 0.5);
+
+        io.to(room).emit("game_start_response", newGame, shuffled);
         gameInstances.push(newGame);
       })
       .then(() => {
         roundTimer(io, room);
       });
   });
-  socket.on("round_end", (room, socketId) => {
-    const game = fetchGameInstance(room);
-    game.roundCount += 1;
-    io.to(room).emit("round_end_response", game.questionArray[game.roundCount]);
-  });
+  // socket.on("round_end", (room, socketId) => {
+  //   const game = fetchGameInstance(room);
+  //   game.roundCount += 1;
+  //   //shuffle possible answers to make them unpredictable
+  //   const shuffled = [
+  //     ...game.questionArray[game.roundCount].incorrect_answers,
+  //     game.questionArray[game.roundCount].correct_answer,
+  //   ].sort(() => Math.random() - 0.5);
+  //   game.chosenAnswers = [];
+  //   io.to(room).emit(
+  //     "round_end_response",
+  //     game.questionArray[game.roundCount],
+  //     shuffled
+  //   );
+  // });
 
   socket.on("submit_answer", (answer, room) => {
-    const game = fetchGameInstance(room);
+    let game = fetchGameInstance(room);
     game.chosenAnswers.push(answer);
     if (answer === game.questionArray[game.roundCount].correct_answer) {
       console.log("correct answer");
-      if (game.questionArray.length === roundCount) {
+      game.roundCount += 1;
+      console.log(game.questionArray.length, game.roundCount);
+      if (game.questionArray.length === game.roundCount) {
         io.to(room).emit("game_end");
         game = null;
       } else {
-        game.roundCount += 1;
         console.log("ending round");
+        game.chosenAnswers = [];
+        const shuffled = [
+          ...game.questionArray[game.roundCount].incorrect_answers,
+          game.questionArray[game.roundCount].correct_answer,
+        ].sort(() => Math.random() - 0.5);
         io.to(room).emit(
           "round_end_response",
-          game.questionArray[game.roundCount]
+          game.questionArray[game.roundCount],
+          shuffled
         );
       }
     } else {

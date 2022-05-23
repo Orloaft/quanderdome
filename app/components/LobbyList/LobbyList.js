@@ -12,6 +12,7 @@ export const LobbyList = () => {
   const [roomId, setRoomId] = useState(null);
   const [question, setQuestion] = useState(null);
   const [answers, setAnswers] = useState([]);
+  const [options, setOptions] = useState(null);
 
   async function gameStart(config) {
     gameService.startGame(config, roomId, socketService.socket.id);
@@ -43,11 +44,13 @@ export const LobbyList = () => {
     });
   }
   useEffect(() => {
-    socketService.socket.on("game_start_response", (game) => {
+    socketService.socket.on("game_start_response", (game, shuffled) => {
+      setOptions(shuffled);
       setQuestion(game.questionArray[0]);
     });
-    socketService.socket.on("round_end_response", (question) => {
+    socketService.socket.on("round_end_response", (question, shuffled) => {
       console.log("ending round");
+      setOptions(shuffled);
       setQuestion(question);
     });
     socketService.socket.on("leave_room_response", () => {
@@ -116,7 +119,7 @@ export const LobbyList = () => {
         (question ? (
           <GameRoom
             question={question}
-            correct={question.correct_answer}
+            options={options}
             leaveLobby={leaveLobby}
             roomId={roomId}
             answers={answers}

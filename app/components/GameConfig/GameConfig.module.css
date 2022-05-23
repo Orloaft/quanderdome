@@ -1,0 +1,41 @@
+.config {
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #def2c8;
+  padding: 1rem;
+}
+.config__form {
+  display: flex;
+  flex-direction: column;
+}
+.config__form select {
+  margin-top: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: transparent;
+  border: 2px solid #def2c8;
+  font-size: 1rem;
+  color: #def2c8;
+}
+
+.button {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  color: #def2c8;
+  border-style: none;
+  background-color: transparent;
+  border-radius: 1rem;
+  border: 2px solid #def2c8;
+}
+.button:hover {
+  background-color: #def2c8;
+  color: black;
+  border: 2px solid black;
+}
+
+.input {
+  background-color: transparent;
+  border: 2px solid #def2c8;
+  font-size: 1rem;
+  color: #def2c8;
+}/*# sourceMappingURL=GameConfig.module.css.map */
