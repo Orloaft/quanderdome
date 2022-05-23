@@ -10,10 +10,7 @@ const io = require("socket.io")(http, {
 const port = process.env.PORT || 9000;
 const roundTimer = require("./services/roundTimer");
 const GameService = require("./services/gameService");
-let roundCount = 0;
-let submittedAnswers = [];
-let correct_answer = null;
-let questionArray = [];
+
 // array of game objects that hold relevant data to a single gameroom instance
 const gameInstances = [];
 
@@ -30,16 +27,7 @@ function getActiveRooms(io) {
   const res = filtered.map((i) => i[0]);
   return res;
 }
-function makeid(length) {
-  var result = "";
-  var characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  var charactersLength = characters.length;
-  for (var i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
+
 //returns game instance that matches a roomId
 const fetchGameInstance = (roomId) => {
   return gameInstances.find((instance) => instance.roomId === roomId);
@@ -94,13 +82,15 @@ io.on("connection", (socket) => {
       });
   });
 
-  socket.on("submit_answer", (answer, room) => {
+  socket.on("submit_answer", (answer, room, socketId) => {
     let game = fetchGameInstance(room);
     game.chosenAnswers.push(answer);
+    //if answer matches correct answer proceed to next round with another question
     if (answer === game.questionArray[game.roundCount].correct_answer) {
       console.log("correct answer");
       game.roundCount += 1;
       console.log(game.questionArray.length, game.roundCount);
+      //if on the last question of set. end game
       if (game.questionArray.length === game.roundCount) {
         io.to(room).emit("game_end");
         game = null;
@@ -116,8 +106,11 @@ io.on("connection", (socket) => {
           game.questionArray[game.roundCount],
           shuffled
         );
-      }
+      } // submit response to handle wrong answers
     } else {
+      let player = game.players.find((player) => player.id === socketId);
+      player.life -= 10;
+      io.to(room).emit("update_hp", player);
       io.to(room).emit("submit_answer_response", game.chosenAnswers);
     }
   });
