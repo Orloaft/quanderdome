@@ -65,7 +65,7 @@ io.on("connection", (socket) => {
         newGame.roomId = room;
         const players = [...io.sockets.adapter.rooms.get(room)];
         newGame.players = players.map((player) => {
-          return { id: player, life: 100 };
+          return { id: player, life: 100, score: 0 };
         });
         newGame.questionArray = result.data.results;
         newGame.roundCount = 0;
@@ -84,10 +84,12 @@ io.on("connection", (socket) => {
 
   socket.on("submit_answer", (answer, room, socketId) => {
     let game = fetchGameInstance(room);
+    let player = game.players.find((player) => player.id === socketId);
     game.chosenAnswers.push(answer);
     //if answer matches correct answer proceed to next round with another question
     if (answer === game.questionArray[game.roundCount].correct_answer) {
       console.log("correct answer");
+      player.score += 1;
       game.roundCount += 1;
       console.log(game.questionArray.length, game.roundCount);
       //if on the last question of set. end game
@@ -101,6 +103,7 @@ io.on("connection", (socket) => {
           ...game.questionArray[game.roundCount].incorrect_answers,
           game.questionArray[game.roundCount].correct_answer,
         ].sort(() => Math.random() - 0.5);
+        io.to(room).emit("update_score", player);
         io.to(room).emit(
           "round_end_response",
           game.questionArray[game.roundCount],
@@ -108,10 +111,14 @@ io.on("connection", (socket) => {
         );
       } // submit response to handle wrong answers
     } else {
-      let player = game.players.find((player) => player.id === socketId);
       player.life -= 10;
-      io.to(room).emit("update_hp", player);
-      io.to(room).emit("submit_answer_response", game.chosenAnswers);
+      //check if player depleted their hp
+      if (player.life > 0) {
+        io.to(room).emit("update_hp", player);
+        io.to(room).emit("submit_answer_response", game.chosenAnswers);
+      } else {
+        io.to(room).emit("game_end");
+      }
     }
   });
 });

@@ -6,6 +6,7 @@ import { HealthBar } from "../HealthBar/HealthBar";
 
 export const GameRoom = ({ question, leaveLobby, roomId, options }) => {
   const [time, setTime] = useState(null);
+  const [score, setScore] = useState(0);
   const submitAnswer = (answer, roomId) => {
     console.log("answer sent");
     socketService.socket.emit(
@@ -20,7 +21,9 @@ export const GameRoom = ({ question, leaveLobby, roomId, options }) => {
     socketService.socket.on("tick", (time) => {
       setTime(time);
     });
-
+    socketService.socket.on("update_score", (player) => {
+      setScore(player.score);
+    });
     socketService.socket.on("game_end", () => {
       leaveLobby();
     });
@@ -28,6 +31,7 @@ export const GameRoom = ({ question, leaveLobby, roomId, options }) => {
   return (
     <>
       <h1 className={styles.time}>{time}</h1>
+
       {question && (
         <QuestionComponent
           submitAnswer={submitAnswer}
@@ -36,7 +40,10 @@ export const GameRoom = ({ question, leaveLobby, roomId, options }) => {
           options={options}
         />
       )}
-      <HealthBar />
+      <div className={styles.score_container}>
+        <HealthBar />
+        <span className={styles.score}>{score + " points"}</span>
+      </div>
     </>
   );
 };

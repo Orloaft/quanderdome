@@ -1,6 +1,6 @@
 import styles from "./LobbyList.module.scss";
 import socketService from "../../services/socketService";
-import { useState, useEffect, useLayoutEffect } from "react";
+import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Lobby } from "../Lobby/Lobby";
 import { GameRoom } from "../GameRoom/GameRoom";

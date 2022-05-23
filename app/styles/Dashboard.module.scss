@@ -10,6 +10,7 @@
   background-color: #171717;
 }
 .dashboard {
+  padding: 0.5rem;
   border: 2px solid #def2c8;
   display: flex;
   flex-direction: column;
@@ -27,11 +28,12 @@
   &__heading {
     position: relative;
     top: -10%;
-    margin: 0;
+    margin: 20% 0 0 0;
     font-size: 4rem;
     color: #def2c8;
     @media (min-width: 48rem) {
       top: 0;
+      margin: 0;
     }
   }
 }

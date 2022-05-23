@@ -4,6 +4,7 @@ import socketService from "../../services/socketService";
 
 export const HealthBar = () => {
   const [health, setHealth] = useState(100);
+
   useEffect(() => {
     socketService.socket.on("update_hp", (player) => {
       if (player.id === socketService.socket.id) {
