@@ -22,7 +22,9 @@ export const GameRoom = ({ question, leaveLobby, roomId, options }) => {
       setTime(time);
     });
     socketService.socket.on("update_score", (player) => {
-      setScore(player.score);
+      if (player.id === socketService.socket.id) {
+        setScore(player.score);
+      }
     });
     socketService.socket.on("game_end", () => {
       leaveLobby();

@@ -5,13 +5,14 @@ import { v4 as uuidv4 } from "uuid";
 import { Lobby } from "../Lobby/Lobby";
 import { GameRoom } from "../GameRoom/GameRoom";
 import gameService from "../../services/gameService";
+import { ScoreBoard } from "../ScoreBoard/ScoreBoard";
 
 export const LobbyList = () => {
   const [roomList, setRoomList] = useState([]);
   const [joining, setJoining] = useState(false);
   const [roomId, setRoomId] = useState(null);
   const [question, setQuestion] = useState(null);
-  const [answers, setAnswers] = useState([]);
+  const [scoreBoard, setScoreBoard] = useState(null);
   const [options, setOptions] = useState(null);
 
   async function gameStart(config) {
@@ -43,6 +44,10 @@ export const LobbyList = () => {
       setJoining(false);
     });
   }
+  const leaveScoreBoard = () => {
+    refresh();
+    setScoreBoard(null);
+  };
   useEffect(() => {
     socketService.socket.on("game_start_response", (game, shuffled) => {
       setOptions(shuffled);
@@ -58,71 +63,78 @@ export const LobbyList = () => {
       socketService.socket.emit("timer_off", roomId);
     });
 
-    socketService.socket.on("game_end", () => {
+    socketService.socket.on("game_end", (game) => {
       setQuestion(false);
       setRoomId(false);
       refresh();
+      setScoreBoard(game);
     });
   }, []);
 
   return (
     <>
-      {(!roomId && (
-        <>
-          <form
-            className={styles.join_lobby}
-            onSubmit={(e) => {
-              joinRoom(e);
-            }}
-          >
-            <span> Create room</span>
-            <input
-              className={styles.input}
-              type="text"
-              name="roomInput"
-              autoComplete="off"
-            ></input>
-            <button className={styles.button} type="submit" disabled={joining}>
-              {joining ? "Creating..." : "Create"}
-            </button>
-          </form>
-          <section className={styles.lobbies}>
-            <span className={styles.lobbies__heading}>Room list</span>
-            <ul className={styles.lobbies__list}>
-              {roomList.map((room) => {
-                return (
-                  <li
-                    onClick={(e) => {
-                      e.preventDefault();
-                      socketService.joinGameRoom(socketService.socket, room);
-                      setRoomId(room);
-                    }}
-                    className={styles.lobbies__list_item}
-                    key={uuidv4()}
-                  >
-                    <span>{room}</span>
-                  </li>
-                );
-              })}
-            </ul>
-            <button
-              onClick={() => {
-                refresh();
+      {scoreBoard ? (
+        <ScoreBoard handleLeave={leaveScoreBoard} game={scoreBoard} />
+      ) : (
+        (!roomId && (
+          <>
+            <form
+              className={styles.join_lobby}
+              onSubmit={(e) => {
+                joinRoom(e);
               }}
-              className={styles.button}
             >
-              Show rooms
-            </button>
-          </section>
-        </>
-      )) ||
+              <span> Create room</span>
+              <input
+                className={styles.input}
+                type="text"
+                name="roomInput"
+                autoComplete="off"
+              ></input>
+              <button
+                className={styles.button}
+                type="submit"
+                disabled={joining}
+              >
+                {joining ? "Creating..." : "Create"}
+              </button>
+            </form>
+            <section className={styles.lobbies}>
+              <span className={styles.lobbies__heading}>Room list</span>
+              <ul className={styles.lobbies__list}>
+                {roomList.map((room) => {
+                  return (
+                    <li
+                      onClick={(e) => {
+                        e.preventDefault();
+                        socketService.joinGameRoom(socketService.socket, room);
+                        setRoomId(room);
+                      }}
+                      className={styles.lobbies__list_item}
+                      key={uuidv4()}
+                    >
+                      <span>{room}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+              <button
+                onClick={() => {
+                  refresh();
+                }}
+                className={styles.button}
+              >
+                Show rooms
+              </button>
+            </section>
+          </>
+        )) ||
         (question ? (
           <GameRoom
             question={question}
             options={options}
             leaveLobby={leaveLobby}
             roomId={roomId}
-            answers={answers}
           />
         ) : (
           <Lobby
@@ -130,7 +142,8 @@ export const LobbyList = () => {
             roomId={roomId}
             gameStart={gameStart}
           />
-        ))}
+        ))
+      )}
     </>
   );
 };

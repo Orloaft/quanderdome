@@ -81,7 +81,9 @@ io.on("connection", (socket) => {
         roundTimer(io, room, gameConfig.time);
       });
   });
-
+  socket.on("time_up", (room) => {
+    io.to(room).emit("game_end", fetchGameInstance(room));
+  });
   socket.on("submit_answer", (answer, room, socketId) => {
     let game = fetchGameInstance(room);
     let player = game.players.find((player) => player.id === socketId);
@@ -94,7 +96,7 @@ io.on("connection", (socket) => {
       console.log(game.questionArray.length, game.roundCount);
       //if on the last question of set. end game
       if (game.questionArray.length === game.roundCount) {
-        io.to(room).emit("game_end");
+        io.to(room).emit("game_end", game);
         game = null;
       } else {
         console.log("ending round");
@@ -117,7 +119,7 @@ io.on("connection", (socket) => {
         io.to(room).emit("update_hp", player);
         io.to(room).emit("submit_answer_response", game.chosenAnswers);
       } else {
-        io.to(room).emit("game_end");
+        io.to(room).emit("game_end", game);
       }
     }
   });
