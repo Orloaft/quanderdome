@@ -2,8 +2,6 @@ import styles from "./GameConfig.module.scss";
 import { CategorySelect } from "../CategorySelect/CategorySelect";
 import { DifficultySelect } from "../DifficultySelect/DifficultySelect";
 import { useState } from "react";
-import socketService from "../../services/socketService";
-import gameService from "../../services/gameService";
 
 export const GameConfig = ({ roomId, gameStart }) => {
   const [questionRange, setQuestionRange] = useState("1");
@@ -48,11 +46,11 @@ export const GameConfig = ({ roomId, gameStart }) => {
           }}
           className={styles.config__form}
         >
-          <label htmlFor="time">{roundTime} Time</label>
+          <label htmlFor="time">{roundTime} Seconds</label>
           <input
             className={styles.input}
             onChange={(e) => {
-              handleRangeChange(e);
+              handleTimeChange(e);
             }}
             name="time"
             type="range"

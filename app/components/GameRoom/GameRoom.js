@@ -2,7 +2,7 @@ import styles from "./GameRoom.module.scss";
 import socketService from "../../services/socketService";
 import { useState, useEffect } from "react";
 import { QuestionComponent } from "../QuestionComponent/QuestionComponent";
-import gameService from "../../services/gameService";
+import { HealthBar } from "../HealthBar/HealthBar";
 
 export const GameRoom = ({ question, leaveLobby, roomId, options }) => {
   const [time, setTime] = useState(null);
@@ -36,6 +36,7 @@ export const GameRoom = ({ question, leaveLobby, roomId, options }) => {
           options={options}
         />
       )}
+      <HealthBar />
     </>
   );
 };

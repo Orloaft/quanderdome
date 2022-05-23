@@ -1,6 +1,6 @@
-const roundTimer = (io, room) => {
+const roundTimer = (io, room, time) => {
   // Set the date we're counting down to
-  const countDownDate = new Date().getTime() + 60000;
+  const countDownDate = new Date().getTime() + time * 1000;
 
   // Update the count down every 1 second
   const x = setInterval(function () {
@@ -10,16 +10,7 @@ const roundTimer = (io, room) => {
     // Find the distance between now and the count down date
     const distance = countDownDate - now;
 
-    // Time calculations for days, hours, minutes and seconds
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor(
-      (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-    );
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    // Display the result in the element with id="demo"
-    io.to(room).emit("tick", seconds);
+    io.to(room).emit("tick", Math.floor(distance / 1000));
 
     // If the count down is finished, write some text
     if (distance < 0) {

@@ -90,7 +90,7 @@ io.on("connection", (socket) => {
         gameInstances.push(newGame);
       })
       .then(() => {
-        roundTimer(io, room);
+        roundTimer(io, room, gameConfig.time);
       });
   });
 
