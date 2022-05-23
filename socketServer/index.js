@@ -14,22 +14,19 @@ let roundCount = 0;
 let submittedAnswers = [];
 let correct_answer = null;
 let questionArray = [];
-
+// array of game objects that hold relevant data to a single gameroom instance
 const gameInstances = [];
 
 app.use(cors());
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
+// functions that returns array of active game lobbies
 function getActiveRooms(io) {
-  // Convert map into 2D list:
-  // ==> [['4ziBKG9XFS06NdtVAAAH', Set(1)], ['room1', Set(2)], ...]
   const arr = Array.from(io.sockets.adapter.rooms);
-  // Filter rooms whose name exist in set:
-  // ==> [['room1', Set(2)], ['room2', Set(2)]]
+  //filter out extra rooms that each socket starts in
   const filtered = arr.filter((room) => !room[1].has(room[0]));
   // Return only the room name:
-  // ==> ['room1', 'room2']
   const res = filtered.map((i) => i[0]);
   return res;
 }
@@ -43,16 +40,18 @@ function makeid(length) {
   }
   return result;
 }
+//returns game instance that matches a roomId
 const fetchGameInstance = (roomId) => {
   return gameInstances.find((instance) => instance.roomId === roomId);
 };
+//endpoint for initiating client connection
 io.on("connection", (socket) => {
   console.log("connected with socket " + socket.id);
-
+  //endpoint for getting list of active lobbies
   socket.on("show_rooms", (socketId) => {
     io.to(socketId).emit("show_rooms_response", getActiveRooms(io));
-    console.log("showing rooms:" + getActiveRooms(io));
   });
+  //endpoint for joining lobbys
   socket.on("join_room", function (roomId) {
     socket.join(roomId);
     socket.emit("room_joined", roomId);
@@ -61,11 +60,13 @@ io.on("connection", (socket) => {
   socket.on("room_message", (roomId, msg) => {
     io.to(roomId).emit("room_message_received", msg);
   });
+  //disconnect from lobby
   socket.on("leave_room", (room) => {
     socket.leave(room);
     socket.emit("leave_room_response");
     console.log("leaving room: " + room);
   });
+  //make call to Trivia db based on config passed from client and initiate game instance
   socket.on("game_start", async (gameConfig, room, socketId) => {
     axios
       .get(
@@ -85,25 +86,26 @@ io.on("connection", (socket) => {
       });
   });
   socket.on("round_end", (room, socketId) => {
-    roundCount++;
-    console.log("correct answer from " + socketId);
-    submittedAnswers = [];
-    io.to(room).emit("round_end_response", questionArray[roundCount], socketId);
+    const game = fetchGameInstance(room);
+    game.roundCount += 1;
+    io.to(room).emit("round_end_response", game.questionArray[game.roundCount]);
   });
 
-  socket.on("submit_answer", (answer, room, socketId) => {
-    submittedAnswers.push(answer);
-    if (answer === correct_answer) {
-      roundCount++;
-      console.log("correct answer from " + socketId);
-      submittedAnswers = [];
-      if (questionArray.length === roundCount) {
+  socket.on("submit_answer", (answer, room) => {
+    const game = fetchGameInstance(room);
+    game.chosenAnswers.push(answer);
+    if (answer === game.questionArray[game.roundCount].correct_answer) {
+      console.log("correct answer");
+      if (game.questionArray.length === roundCount) {
         io.to(room).emit("game_end");
-        roundCount = 0;
+        game = null;
       } else {
+        game.roundCount += 1;
         console.log("ending round");
-        correct_answer = questionArray[roundCount].correct_answer;
-        io.to(room).emit("round_end_response", questionArray[roundCount]);
+        io.to(room).emit(
+          "round_end_response",
+          game.questionArray[game.roundCount]
+        );
       }
     }
     io.to(room).emit("submit_answer_response", submittedAnswers);
