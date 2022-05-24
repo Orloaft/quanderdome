@@ -1,8 +1,9 @@
+@use "../../styles/partials/variables" as *;
 .lobbies {
   max-width: 100%;
   display: flex;
   flex-direction: column;
-  color: #def2c8;
+  color: $border-color;
   &__heading {
     font-size: 2rem;
     align-self: center;
@@ -22,9 +23,9 @@
       max-width: 100%;
       height: 2rem;
       border-radius: 0.5rem;
-      border: 2px solid #def2c8;
+      border: 2px solid $border-color;
       &:hover {
-        background-color: #def2c8;
+        background-color: $border-color;
         color: black;
         border: 2px solid black;
       }
@@ -35,7 +36,7 @@
   margin-top: 2rem;
   display: flex;
   flex-direction: column;
-  color: #def2c8;
+  color: $border-color;
   & span {
     font-size: 2rem;
   }
@@ -46,13 +47,13 @@
 .button {
   margin-top: 0.5rem;
   font-size: 1rem;
-  color: #def2c8;
+  color: $border-color;
   border-style: none;
   background-color: transparent;
   border-radius: 1rem;
-  border: 2px solid #def2c8;
+  border: 2px solid $border-color;
   &:hover {
-    background-color: #def2c8;
+    background-color: $border-color;
     color: black;
     border: 2px solid black;
   }
@@ -60,15 +61,15 @@
 .input {
   border-radius: 0.5rem;
   background-color: transparent;
-  border: 2px solid #def2c8;
+  border: 2px solid $border-color;
   font-size: 1rem;
-  color: #def2c8;
+  color: $border-color;
 }
 .username {
   position: absolute;
   top: 1rem;
   left: 1rem;
-  color: #def2c8;
+  color: $border-color;
   font-size: 1.5rem;
   & span {
     color: aquamarine;

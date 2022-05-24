@@ -1,5 +1,6 @@
+@use "../../styles/partials/variables" as *;
 .health {
-  border: 2px solid #def2c8;
+  border: 2px solid $border-color;
   width: 80%;
   height: 3rem;
   background-color: transparent;

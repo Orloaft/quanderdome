@@ -1,5 +1,6 @@
+@use "../../styles/partials/variables" as *;
 .time {
-  color: #def2c8;
+  color: $border-color;
   font-size: 2rem;
   @media (min-width: 48rem) {
     font-size: 4rem;
@@ -9,20 +10,20 @@
 .question {
   font-size: 2rem;
   display: flex;
-  color: #def2c8;
+  color: $border-color;
   flex-direction: column;
   max-width: 100%;
 }
 .answer {
   margin-top: 0.5rem;
   font-size: 1rem;
-  color: #def2c8;
+  color: $border-color;
   border-style: none;
   background-color: transparent;
   border-radius: 1rem;
-  border: 2px solid #def2c8;
+  border: 2px solid $border-color;
   &:hover {
-    background-color: #def2c8;
+    background-color: $border-color;
     color: black;
     border: 2px solid black;
   }
@@ -34,7 +35,7 @@
   border-style: none;
   background-color: gray;
   border-radius: 1rem;
-  border: 2px solid #def2c8;
+  border: 2px solid $border-color;
 }
 .score_container {
   width: 100%;

@@ -1,5 +1,6 @@
+@use "../../styles/partials/variables" as *;
 .chat {
-  color: #def2c8;
+  color: $border-color;
   display: flex;
   width: 100%;
   justify-content: space-around;
@@ -43,7 +44,7 @@
     font-size: 1.5rem;
     padding: 1rem;
     border-radius: 0.5rem;
-    border: 2px solid #def2c8;
+    border: 2px solid $border-color;
     list-style: none;
     overflow-y: scroll;
     height: 10rem;
@@ -64,13 +65,13 @@
   z-index: 2;
   margin-top: 0.5rem;
   font-size: 1rem;
-  color: #def2c8;
+  color: $border-color;
   border-style: none;
   background-color: transparent;
   border-radius: 1rem;
-  border: 2px solid #def2c8;
+  border: 2px solid $border-color;
   &:hover {
-    background-color: #def2c8;
+    background-color: $border-color;
     color: black;
     border: 2px solid black;
   }
@@ -79,7 +80,7 @@
   border-radius: 0.5rem;
   width: 20rem;
   background-color: transparent;
-  border: 2px solid #def2c8;
+  border: 2px solid $border-color;
   font-size: 1rem;
-  color: #def2c8;
+  color: $border-color;
 }

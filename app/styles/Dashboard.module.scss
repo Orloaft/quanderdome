@@ -1,5 +1,5 @@
 @use "./partials/fonts" as *;
-
+@use "./partials/variables" as *;
 .container {
   font-family: odibee;
   height: 200vh;
@@ -7,7 +7,7 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  background-color: #171717;
+  background-color: $primary-background;
   @media (min-width: 48rem) {
     height: 100vh;
   }
@@ -22,9 +22,9 @@
 
   align-items: center;
   border-radius: 0.75rem;
-  background-color: #171717;
+  background-color: $primary-background;
   @media (min-width: 48rem) {
-    border: 2px solid #def2c8;
+    border: 2px solid $border-color;
     height: 75%;
     width: 100%;
   }
@@ -32,7 +32,7 @@
   &__heading {
     margin: 20% 0 0 0;
     font-size: 3rem;
-    color: #def2c8;
+    color: $border-color;
     @media (min-width: 48rem) {
       top: 0;
       font-size: 4rem;
@@ -41,12 +41,12 @@
   }
 }
 .sign_in_form {
-  border: 2px solid #def2c8;
+  border: 2px solid $border-color;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #171717;
+  background-color: $primary-background;
   height: 70%;
   width: 70%;
   border-radius: 0.75rem;
@@ -64,7 +64,7 @@
     width: 50%;
     height: 3rem;
     border-radius: 0.75rem;
-    color: #def2c8;
+    color: $border-color;
     font-size: 2rem;
   }
 }

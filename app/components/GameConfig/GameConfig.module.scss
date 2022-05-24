@@ -1,3 +1,4 @@
+@use "../../styles/partials/variables" as *;
 .config {
   border-radius: 0.5rem;
   display: flex;
@@ -5,7 +6,7 @@
 
   padding: 1rem;
   @media (min-width: 48rem) {
-    border: 2px solid #def2c8;
+    border: 2px solid $border-color;
   }
   &__form {
     display: flex;
@@ -14,29 +15,29 @@
       margin-top: 0.5rem;
       border-radius: 0.5rem;
       background-color: transparent;
-      border: 2px solid #def2c8;
+      border: 2px solid $border-color;
       font-size: 1rem;
-      color: #def2c8;
+      color: $border-color;
     }
   }
 }
 .button {
   margin-top: 0.5rem;
   font-size: 1rem;
-  color: #def2c8;
+  color: $border-color;
   border-style: none;
   background-color: transparent;
   border-radius: 1rem;
-  border: 2px solid #def2c8;
+  border: 2px solid $border-color;
   &:hover {
-    background-color: #def2c8;
+    background-color: $border-color;
     color: black;
     border: 2px solid black;
   }
 }
 .input {
   background-color: transparent;
-  border: 2px solid #def2c8;
+  border: 2px solid $border-color;
   font-size: 1rem;
-  color: #def2c8;
+  color: $border-color;
 }
