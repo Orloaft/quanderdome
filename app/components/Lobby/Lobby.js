@@ -77,7 +77,11 @@ export const Lobby = ({ roomId, leaveLobby, gameStart, credentials }) => {
             styles.chat__container + " " + styles.chat__container_config
           }
         >
-          <GameConfig roomId={roomId} gameStart={gameStart} />
+          <GameConfig
+            roomId={roomId}
+            gameStart={gameStart}
+            playerList={playerList}
+          />
           <button
             className={styles.button}
             onClick={() => {

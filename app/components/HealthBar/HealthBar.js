@@ -7,7 +7,7 @@ export const HealthBar = () => {
 
   useEffect(() => {
     socketService.socket.on("update_hp", (player) => {
-      if (player.id === socketService.socket.id) {
+      if (player.id === window.localStorage.getItem("username")) {
         setHealth(player.life);
       }
     });

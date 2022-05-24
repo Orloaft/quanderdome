@@ -3,7 +3,7 @@ import { CategorySelect } from "../CategorySelect/CategorySelect";
 import { DifficultySelect } from "../DifficultySelect/DifficultySelect";
 import { useState } from "react";
 
-export const GameConfig = ({ roomId, gameStart }) => {
+export const GameConfig = ({ playerList, gameStart }) => {
   const [questionRange, setQuestionRange] = useState("1");
   const [questionDifficulty, setQuestionDifficulty] = useState("easy");
   const [questionCategory, setQuestionCategory] = useState("9");
@@ -32,6 +32,7 @@ export const GameConfig = ({ roomId, gameStart }) => {
       category: questionCategory,
       difficulty: questionDifficulty,
       time: roundTime,
+      playerList: playerList,
     };
     console.log(gameConfig);
     gameStart(gameConfig);

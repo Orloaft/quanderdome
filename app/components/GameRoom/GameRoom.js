@@ -4,17 +4,18 @@ import { useState, useEffect } from "react";
 import { QuestionComponent } from "../QuestionComponent/QuestionComponent";
 import { HealthBar } from "../HealthBar/HealthBar";
 
-export const GameRoom = ({ question, leaveLobby, roomId, options }) => {
+export const GameRoom = ({
+  question,
+  leaveLobby,
+  roomId,
+  options,
+  credentials,
+}) => {
   const [time, setTime] = useState(null);
   const [score, setScore] = useState(0);
   const submitAnswer = (answer, roomId) => {
     console.log("answer sent");
-    socketService.socket.emit(
-      "submit_answer",
-      answer,
-      roomId,
-      socketService.socket.id
-    );
+    socketService.socket.emit("submit_answer", answer, roomId, credentials);
   };
 
   useEffect(() => {
@@ -22,7 +23,7 @@ export const GameRoom = ({ question, leaveLobby, roomId, options }) => {
       setTime(time);
     });
     socketService.socket.on("update_score", (player) => {
-      if (player.id === socketService.socket.id) {
+      if (player.id === credentials) {
         setScore(player.score);
       }
     });

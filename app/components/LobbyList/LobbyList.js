@@ -76,7 +76,11 @@ export const LobbyList = ({ credentials }) => {
   return (
     <>
       {scoreBoard ? (
-        <ScoreBoard handleLeave={leaveScoreBoard} game={scoreBoard} /> //display scoreboard when returning from game
+        <ScoreBoard
+          handleLeave={leaveScoreBoard}
+          game={scoreBoard}
+          credentials={credentials}
+        /> //display scoreboard when returning from game
       ) : (
         (!roomId && ( //if no room id exist, render lobby form and list
           <>
@@ -142,6 +146,7 @@ export const LobbyList = ({ credentials }) => {
             options={options}
             leaveLobby={leaveLobby}
             roomId={roomId}
+            credentials={credentials}
           />
         ) : (
           <Lobby
