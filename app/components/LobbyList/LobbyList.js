@@ -7,7 +7,7 @@ import { GameRoom } from "../GameRoom/GameRoom";
 import gameService from "../../services/gameService";
 import { ScoreBoard } from "../ScoreBoard/ScoreBoard";
 
-export const LobbyList = () => {
+export const LobbyList = ({ credentials }) => {
   const [roomList, setRoomList] = useState([]);
   const [joining, setJoining] = useState(false);
   const [roomId, setRoomId] = useState(null);
@@ -21,6 +21,7 @@ export const LobbyList = () => {
 
   const leaveLobby = () => {
     socketService.socket.emit("leave_room", roomId);
+    refresh();
   };
   async function refresh() {
     socketService.showRooms().then((rooms) => {
@@ -34,7 +35,8 @@ export const LobbyList = () => {
     return new Promise((rs, rj) => {
       socketService.joinGameRoom(
         socketService.socket,
-        e.target.roomInput.value
+        e.target.roomInput.value,
+        credentials
       );
       setRoomId(e.target.roomInput.value);
 
@@ -74,10 +76,11 @@ export const LobbyList = () => {
   return (
     <>
       {scoreBoard ? (
-        <ScoreBoard handleLeave={leaveScoreBoard} game={scoreBoard} />
+        <ScoreBoard handleLeave={leaveScoreBoard} game={scoreBoard} /> //display scoreboard when returning from game
       ) : (
-        (!roomId && (
+        (!roomId && ( //if no room id exist, render lobby form and list
           <>
+            <span className={styles.username}>signed in as {credentials}</span>
             <form
               className={styles.join_lobby}
               onSubmit={(e) => {
@@ -107,7 +110,11 @@ export const LobbyList = () => {
                     <li
                       onClick={(e) => {
                         e.preventDefault();
-                        socketService.joinGameRoom(socketService.socket, room);
+                        socketService.joinGameRoom(
+                          socketService.socket,
+                          room,
+                          credentials
+                        );
                         setRoomId(room);
                       }}
                       className={styles.lobbies__list_item}
@@ -129,7 +136,7 @@ export const LobbyList = () => {
             </section>
           </>
         )) ||
-        (question ? (
+        (question ? ( //render lobby if question was not provided by server
           <GameRoom
             question={question}
             options={options}
@@ -141,6 +148,7 @@ export const LobbyList = () => {
             leaveLobby={leaveLobby}
             roomId={roomId}
             gameStart={gameStart}
+            credentials={credentials}
           />
         ))
       )}

@@ -28,10 +28,9 @@ class SocketService {
       });
     });
   }
-  async joinGameRoom(socket, roomId) {
+  async joinGameRoom(socket, roomId, credentials) {
     return new Promise((rs, rj) => {
-      const data = { room: roomId, socket: socket };
-      socket.emit("join_room", data.room);
+      socket.emit("join_room", roomId, credentials);
       socket.on("room_joined", (room) => {
         rs(true);
       });

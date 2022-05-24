@@ -49,29 +49,6 @@ export default function LoginPage({ logIn }) {
             </a> */}
             Sign in
           </button>
-          {/* <input
-            className={styles.sign_in_form__field}
-            name="username"
-            type="text"
-            placeholder="username"
-          ></input>
-          <input
-            className={styles.sign_in_form__field}
-            name="password"
-            type="password"
-            placeholder="password"
-          ></input>
-          <button className={styles.sign_in_form__submit} type="submit">
-            Sign in
-          </button>
-          <span className={styles.sign_up}>
-            {" "}
-            Not an existing user? please click{" "}
-            <Link href="/SignupPage" className={styles.link}>
-              <span className={styles.link__text}>here</span>
-            </Link>{" "}
-            to sign up
-          </span> */}
         </form>
       </section>
     </div>

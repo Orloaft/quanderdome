@@ -8,11 +8,33 @@ const io = require("socket.io")(http, {
   },
 });
 const port = process.env.PORT || 9000;
-const roundTimer = require("./services/roundTimer");
-const GameService = require("./services/gameService");
 
+const GameService = require("./services/gameService");
+const roomInstances = [];
 // array of game objects that hold relevant data to a single gameroom instance
 const gameInstances = [];
+//timer for keeping game time
+const roundTimer = (room, time) => {
+  // Set the date we're counting down to
+  const countDownDate = new Date().getTime() + time * 1000;
+
+  // Update the count down every 1 second
+  const x = setInterval(function () {
+    // Get today's date and time
+    const now = new Date().getTime();
+
+    // Find the distance between now and the count down date
+    const distance = countDownDate - now;
+
+    io.to(room).emit("tick", Math.floor(distance / 1000));
+
+    // If the count down is finished, write some text
+    if (distance < 0) {
+      io.to(room).emit("game_end", fetchGameInstance(room));
+      clearInterval(x);
+    }
+  }, 1000);
+};
 
 app.use(cors());
 app.get("/", (req, res) => {
@@ -39,19 +61,38 @@ io.on("connection", (socket) => {
   socket.on("show_rooms", (socketId) => {
     io.to(socketId).emit("show_rooms_response", getActiveRooms(io));
   });
-  //endpoint for joining lobbys
-  socket.on("join_room", function (roomId) {
+  //endpoint for joining lobbies
+  socket.on("join_room", function (roomId, credentials) {
     socket.join(roomId);
     socket.emit("room_joined", roomId);
-    console.log("joined room: " + roomId);
+    let roomInstance = roomInstances.find((room) => room.id === roomId);
+    if (roomInstance) {
+      roomInstance.players.push(credentials);
+      console.log("joined room: " + roomId);
+    } else {
+      roomInstances.push({ id: roomId, players: [credentials] });
+      console.log("created room: " + roomId);
+    }
+    io.to(roomId).emit(
+      "player_list",
+      roomInstances.find((room) => room.id === roomId)
+    );
   });
   socket.on("room_message", (roomId, msg) => {
+    //endpoint for sending messages in your lobby
     io.to(roomId).emit("room_message_received", msg);
   });
   //disconnect from lobby
-  socket.on("leave_room", (room) => {
+  socket.on("leave_room", (room, credentials) => {
+    console.log(roomInstances);
+    let exitedRoom = roomInstances.find((instance) => instance.id === room);
     socket.leave(room);
     socket.emit("leave_room_response");
+    console.log(exitedRoom.players);
+    exitedRoom.players = exitedRoom.players.filter(
+      (player) => player !== credentials
+    );
+    io.to(room).emit("player_list", exitedRoom);
     console.log("leaving room: " + room);
   });
   //make call to Trivia db based on config passed from client and initiate game instance
@@ -61,6 +102,7 @@ io.on("connection", (socket) => {
         `https://opentdb.com/api.php?amount=${gameConfig.range}&category=${gameConfig.category}&difficulty=${gameConfig.difficulty}&type=multiple`
       )
       .then((result) => {
+        console.log("games started in room: " + room);
         let newGame = new GameService();
         newGame.roomId = room;
         const players = [...io.sockets.adapter.rooms.get(room)];
@@ -78,12 +120,10 @@ io.on("connection", (socket) => {
         gameInstances.push(newGame);
       })
       .then(() => {
-        roundTimer(io, room, gameConfig.time);
+        roundTimer(room, gameConfig.time);
       });
   });
-  socket.on("time_up", (room) => {
-    io.to(room).emit("game_end", fetchGameInstance(room));
-  });
+
   socket.on("submit_answer", (answer, room, socketId) => {
     let game = fetchGameInstance(room);
     let player = game.players.find((player) => player.id === socketId);
