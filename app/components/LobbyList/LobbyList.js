@@ -84,7 +84,9 @@ export const LobbyList = ({ credentials }) => {
       ) : (
         (!roomId && ( //if no room id exist, render lobby form and list
           <>
-            <span className={styles.username}>signed in as {credentials}</span>
+            <span className={styles.username}>
+              Signed in as <span>{credentials}</span>
+            </span>
             <form
               className={styles.join_lobby}
               onSubmit={(e) => {

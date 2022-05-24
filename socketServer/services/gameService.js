@@ -4,7 +4,6 @@ class GameService {
   roomId = null;
   questionArray = [];
   chosenAnswers = [];
-  playerLifeTotals = [];
 }
 
 module.exports = GameService;

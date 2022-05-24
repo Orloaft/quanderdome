@@ -6,6 +6,7 @@
 //margin reset on body element
 html,
 body {
+  overflow-y: scroll;
   margin: 0;
   height: 100%;
 }

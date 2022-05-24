@@ -2,8 +2,11 @@
   border-radius: 0.5rem;
   display: flex;
   flex-direction: column;
-  border: 2px solid #def2c8;
+
   padding: 1rem;
+  @media (min-width: 48rem) {
+    border: 2px solid #def2c8;
+  }
   &__form {
     display: flex;
     flex-direction: column;

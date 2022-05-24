@@ -30,6 +30,12 @@ export const GameRoom = ({
     socketService.socket.on("game_end", () => {
       leaveLobby();
     });
+    // listen for when a players life is depleted and if that player is this client. leave lobby
+    socketService.socket.on("player_dead", (game) => {
+      if (game.players.find((player) => player.id === credentials).life < 1) {
+        leaveLobby();
+      }
+    });
   }, []);
   return (
     <>

@@ -2,7 +2,7 @@ import { Component } from "react";
 // import styles from "../styles/LoginPage.module.scss";
 import Link from "next/link";
 import { signIn, getSession } from "next-auth/react";
-import styles from "../styles/Dashboard.module.scss";
+import styles from "../styles/LogInPage.module.scss";
 import { useState } from "react";
 
 export default function LoginPage({ logIn }) {
@@ -12,17 +12,14 @@ export default function LoginPage({ logIn }) {
   };
   return (
     <div className={styles.container}>
-      <section className={styles.dashboard}>
-        <h1 className={styles.dashboard__heading}>
-          {" "}
-          Welcome to the QuanderDome
-        </h1>
+      <section className={styles.login}>
+        <h1 className={styles.login__heading}> Welcome to the QuanderDome</h1>
         <form className={styles.sign_in_form}>
           <input
             onChange={(e) => {
               handleNameChange(e);
             }}
-            className={styles.logIn__input}
+            className={styles.input}
             placeholder="username"
           ></input>
           <button
@@ -35,7 +32,7 @@ export default function LoginPage({ logIn }) {
                 alert("please use at least 5 characters");
               }
             }}
-            className={styles.sign_in_form__submit}
+            className={styles.button}
           >
             {/* <a
               href={`/api/auth/signin`}

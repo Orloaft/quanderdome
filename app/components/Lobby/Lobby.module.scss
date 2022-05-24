@@ -15,11 +15,13 @@
   &__container {
     display: flex;
     flex-direction: column;
-    max-height: 50%;
+
     justify-content: center;
     order: 2;
+    margin-top: 25%;
     @media (min-width: 48rem) {
       order: 1;
+      margin-top: 0;
     }
     &_config {
       max-height: 30%;

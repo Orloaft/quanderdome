@@ -160,7 +160,12 @@ io.on("connection", (socket) => {
         io.to(room).emit("update_hp", player);
         io.to(room).emit("submit_answer_response", game.chosenAnswers);
       } else {
-        io.to(room).emit("game_end", game);
+        player.score = 0;
+        io.to(room).emit("player_dead", game);
+        // end game instance if all players perish
+        if (game.players.find((player) => player.life > 0)) {
+          game = null;
+        }
       }
     }
   });

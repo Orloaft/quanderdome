@@ -5,8 +5,13 @@
   color: #def2c8;
   &__heading {
     font-size: 2rem;
+    align-self: center;
+    margin: 0.5rem;
   }
   &__list {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
     list-style: none;
     width: 30rem;
     max-width: 100%;
@@ -27,11 +32,15 @@
   }
 }
 .join_lobby {
+  margin-top: 2rem;
   display: flex;
   flex-direction: column;
   color: #def2c8;
   & span {
     font-size: 2rem;
+  }
+  @media (min-width: 48rem) {
+    margin-top: 6rem;
   }
 }
 .button {
@@ -57,10 +66,13 @@
 }
 .username {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 1rem;
+  left: 1rem;
   color: #def2c8;
   font-size: 1.5rem;
+  & span {
+    color: aquamarine;
+  }
   @media (min-width: 48rem) {
     font-size: 3rem;
   }
