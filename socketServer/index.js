@@ -96,7 +96,7 @@ io.on("connection", (socket) => {
     console.log("leaving room: " + room);
   });
   //make call to Trivia db based on config passed from client and initiate game instance
-  socket.on("game_start", async (gameConfig, room, socketId) => {
+  socket.on("game_start", async (gameConfig, room) => {
     axios
       .get(
         `https://opentdb.com/api.php?amount=${gameConfig.range}&category=${gameConfig.category}&difficulty=${gameConfig.difficulty}&type=multiple`
@@ -105,8 +105,7 @@ io.on("connection", (socket) => {
         console.log("games started in room: " + room);
         let newGame = new GameService();
         newGame.roomId = room;
-        const players = [...io.sockets.adapter.rooms.get(room)];
-        newGame.players = players.map((player) => {
+        newGame.players = gameConfig.playerList.map((player) => {
           return { id: player, life: 100, score: 0 };
         });
         newGame.questionArray = result.data.results;
@@ -124,9 +123,11 @@ io.on("connection", (socket) => {
       });
   });
 
-  socket.on("submit_answer", (answer, room, socketId) => {
+  socket.on("submit_answer", (answer, room, credentials) => {
     let game = fetchGameInstance(room);
-    let player = game.players.find((player) => player.id === socketId);
+    console.log(game);
+    console.log(credentials);
+    let player = game.players.find((player) => player.id === credentials);
     game.chosenAnswers.push(answer);
     //if answer matches correct answer proceed to next round with another question
     if (answer === game.questionArray[game.roundCount].correct_answer) {
