@@ -1,11 +1,15 @@
 import LoginPage from "./LoginPage";
-import { useSession } from "next-auth/react";
 import Dashboard from "./Dashboard";
 import { useEffect, useState } from "react";
 
 export default function Home() {
   const [darkTheme, setDarkTheme] = useState(undefined);
   const [credentials, setCredentials] = useState(false);
+  //pass the temporary user name from localstorage
+  const logIn = () => {
+    setCredentials(window.localStorage.getItem("username"));
+  };
+  // handle darkmode toggle
   const handleToggle = (e) => {
     setDarkTheme(e.target.checked);
     document.documentElement.setAttribute("data-theme", "dark");
@@ -13,9 +17,7 @@ export default function Home() {
       document.documentElement.removeAttribute("data-theme");
     }
   };
-  const logIn = () => {
-    setCredentials(window.localStorage.getItem("username"));
-  };
+  //on initial render if temporary usernme is stored then set the state variable and render dashboard
   useEffect(() => {
     if (window.localStorage.getItem("username")) {
       setCredentials(window.localStorage.getItem("username"));
@@ -39,9 +41,6 @@ export default function Home() {
   }, []);
 
   if (credentials) {
-    // const { data: session, status } = useSession();
-
-    // if (status === "authenticated") {
     return (
       <>
         {darkTheme !== undefined && (

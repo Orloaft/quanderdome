@@ -7,7 +7,7 @@ export default function LoginPage({ logIn }) {
   const { data: session, status } = useSession();
   const handleNameChange = (e) => {
     setNameInput(e.target.value);
-  };
+  }; //if authentication was succesful render login page to let user choose a name
   if (session) {
     return (
       <div className={styles.container}>
@@ -40,6 +40,7 @@ export default function LoginPage({ logIn }) {
       </div>
     );
   } else {
+    //if session cat be fetched then render button for nextAuth sign in
     return (
       <div className={styles.container}>
         <section className={styles.login}>
