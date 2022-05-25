@@ -105,7 +105,7 @@ async function startServer() {
           `https://opentdb.com/api.php?amount=${gameConfig.range}&category=${gameConfig.category}&difficulty=${gameConfig.difficulty}&type=multiple`
         )
         .then((result) => {
-          if (result) {
+          if (result.data.results[0]) {
             console.log("games started in room: " + room + result.data);
             // console.log(result);
             let newGame = new GameService();

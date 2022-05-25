@@ -16,6 +16,7 @@ body {
   --font-color: #30332e;
   --border-color: black;
   --button-color: #62bbc1;
+  --health-color: #bb4430;
 }
 
 [data-theme="dark"] {
@@ -25,6 +26,7 @@ body {
   --font-color: #def2c8;
   --border-color: #def2c8;
   --button-color: #171717;
+  --health-color: darkgreen;
 }
 /* swtich taken from W3 schools */
 

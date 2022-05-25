@@ -10,7 +10,7 @@ export const ScoreBoard = ({ game, handleLeave }) => {
             return (
               <>
                 <li className={styles.username} key={uuidv4()}>
-                  {player.id}
+                  {player.id}:
                 </li>
                 <li key={uuidv4()}>{player.score} points</li>
               </>

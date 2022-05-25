@@ -6,6 +6,6 @@
   background-color: transparent;
   &__progress {
     height: 90%;
-    background-color: darkgreen;
+    background-color: var(--health-color);
   }
 }
