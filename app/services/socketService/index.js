@@ -1,12 +1,13 @@
-import { io, Socket } from "socket.io-client";
+import io from "socket.io-client";
+
 //class component for handling clients instance of socket connection and exported to any components that need to interact with said instance.
 class SocketService {
   // socket instance that will persist across all components
   socket = null;
   //method to initiate socket instance
-  connect(url) {
+  async connect(url) {
     return new Promise((rs, rj) => {
-      this.socket = io(url);
+      this.socket = io();
 
       if (!this.socket) return rj();
 
@@ -29,13 +30,7 @@ class SocketService {
     });
   }
   async joinGameRoom(socket, roomId, credentials) {
-    return new Promise((rs, rj) => {
-      socket.emit("join_room", roomId, credentials);
-      socket.on("room_joined", (room) => {
-        rs(true);
-      });
-      socket.on("room_join_error", ({ error }) => rj(error));
-    });
+    socket.emit("join_room", roomId, credentials);
   }
 }
 

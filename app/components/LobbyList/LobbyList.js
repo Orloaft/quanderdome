@@ -20,7 +20,7 @@ export const LobbyList = ({ credentials }) => {
   }
 
   const leaveLobby = () => {
-    socketService.socket.emit("leave_room", roomId);
+    socketService.socket.emit("leave_room", roomId, credentials);
     refresh();
   };
   async function refresh() {
@@ -30,21 +30,13 @@ export const LobbyList = ({ credentials }) => {
   }
   async function joinRoom(e) {
     e.preventDefault();
-    setJoining(true);
-
-    return new Promise((rs, rj) => {
-      socketService.joinGameRoom(
-        socketService.socket,
-        e.target.roomInput.value,
-        credentials
-      );
-      setRoomId(e.target.roomInput.value);
-
-      rs();
-    }).then(() => {
-      e.target.roomInput.value = "";
-      setJoining(false);
-    });
+    socketService.joinGameRoom(
+      socketService.socket,
+      e.target.roomInput.value,
+      credentials
+    );
+    setRoomId(e.target.roomInput.value);
+    e.target.roomInput.value = "";
   }
   const leaveScoreBoard = () => {
     refresh();
@@ -61,8 +53,9 @@ export const LobbyList = ({ credentials }) => {
       setQuestion(question);
     });
     socketService.socket.on("leave_room_response", () => {
+      console.log("received leave room clientside");
       setRoomId(null);
-      socketService.socket.emit("timer_off", roomId);
+      console.log(roomId);
     });
 
     socketService.socket.on("game_end", (game) => {
