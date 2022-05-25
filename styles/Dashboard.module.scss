@@ -1,7 +1,9 @@
 @use "./partials/fonts" as *;
 @use "./partials/variables" as *;
+@use "./partials/mixins" as *;
 
 .container {
+  position: relative;
   font-family: odibee;
   height: 200vh;
   display: flex;
@@ -9,7 +11,7 @@
   justify-content: flex-start;
   align-items: center;
   background-color: var(--primary-background);
-  @media (min-width: 48rem) {
+  @include tablet {
     height: 100vh;
   }
 }
@@ -24,7 +26,7 @@
   align-items: center;
   border-radius: 0.75rem;
   background-color: var(--primary-background);
-  @media (min-width: 48rem) {
+  @include tablet {
     border: 2px solid var(--border-color);
     height: 100%;
     width: 100%;
@@ -34,7 +36,7 @@
     margin: 20% 0 0 0;
     font-size: 3rem;
     color: var(--border-color);
-    @media (min-width: 48rem) {
+    @include tablet {
       top: 0;
       font-size: 4rem;
       margin: 0;

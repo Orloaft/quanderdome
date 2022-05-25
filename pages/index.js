@@ -1,6 +1,7 @@
 import LoginPage from "./LoginPage";
 import Dashboard from "./Dashboard";
 import { useEffect, useState } from "react";
+import { Particles } from "../components/Particles/Particles";
 
 export default function Home() {
   const [darkTheme, setDarkTheme] = useState(undefined);

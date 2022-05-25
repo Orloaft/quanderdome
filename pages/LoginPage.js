@@ -11,6 +11,7 @@ export default function LoginPage({ logIn }) {
   if (session) {
     return (
       <div className={styles.container}>
+        <Particles />
         <section className={styles.login}>
           <h1 className={styles.login__heading}> Welcome to the QuanderDome</h1>
           <form className={styles.sign_in_form}>
