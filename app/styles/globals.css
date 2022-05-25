@@ -8,4 +8,19 @@ html,
 body {
   margin: 0;
   height: 100%;
-}/*# sourceMappingURL=globals.css.map */
+} /*# sourceMappingURL=globals.css.map */
+:root {
+  --primary-background: beige;
+  --highlight-color: #536390;
+  --font-color: #30332e;
+  --border-color: black;
+  --button-color: #62bbc1;
+}
+
+[data-theme="dark"] {
+  --primary-background: #171717;
+  --highlight-color: #536390;
+  --font-color: #def2c8;
+  --border-color: #def2c8;
+  --button-color: #171717;
+}

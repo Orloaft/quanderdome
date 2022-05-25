@@ -6,7 +6,7 @@
 
   padding: 1rem;
   @media (min-width: 48rem) {
-    border: 2px solid $border-color;
+    border: 2px solid var(--border-color);
   }
   &__form {
     display: flex;
@@ -15,29 +15,29 @@
       margin-top: 0.5rem;
       border-radius: 0.5rem;
       background-color: transparent;
-      border: 2px solid $border-color;
+      border: 2px solid var(--border-color);
       font-size: 1rem;
-      color: $border-color;
+      color: var(--border-color);
     }
   }
 }
 .button {
   margin-top: 0.5rem;
   font-size: 1rem;
-  color: $border-color;
+  color: var(--border-color);
   border-style: none;
-  background-color: transparent;
+  background-color: var(--button-color);
   border-radius: 1rem;
-  border: 2px solid $border-color;
+  border: 2px solid var(--border-color);
   &:hover {
-    background-color: $border-color;
+    background-color: var(--border-color);
     color: black;
     border: 2px solid black;
   }
 }
 .input {
   background-color: transparent;
-  border: 2px solid $border-color;
+  border: 2px solid var(--border-color);
   font-size: 1rem;
-  color: $border-color;
+  color: var(--border-color);
 }

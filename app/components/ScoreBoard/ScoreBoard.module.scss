@@ -1,6 +1,6 @@
 @use "../../styles/partials/variables" as *;
 .scoreBoard {
-  color: $border-color;
+  color: var(--border-color);
   &__list {
     list-style: none;
     font-size: 2rem;
@@ -9,13 +9,13 @@
     z-index: 2;
     margin-top: 0.5rem;
     font-size: 1rem;
-    color: $border-color;
+    color: var(--font-color);
     border-style: none;
-    background-color: transparent;
+    background-color: var(--button-color);
     border-radius: 1rem;
-    border: 2px solid $border-color;
+    border: 2px solid var(--border-color);
     &:hover {
-      background-color: $border-color;
+      background-color: var(--border-color);
       color: black;
       border: 2px solid black;
     }

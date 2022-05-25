@@ -1,12 +1,10 @@
-import { Component } from "react";
-// import styles from "../styles/LoginPage.module.scss";
-import Link from "next/link";
-import { signIn, getSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import styles from "../styles/LogInPage.module.scss";
 import { useState } from "react";
 
 export default function LoginPage({ logIn }) {
   const [nameInput, setNameInput] = useState("");
+  const { data: session, status } = useSession();
   const handleNameChange = (e) => {
     setNameInput(e.target.value);
   };
@@ -34,18 +32,18 @@ export default function LoginPage({ logIn }) {
             }}
             className={styles.button}
           >
-            {/* <a
-              href={`/api/auth/signin`}
-              className={styles.sign_up}
-              onClick={(e) => {
-                e.preventDefault();
-                signIn();
-              }}
-            >
-              Sign in
-            </a> */}
             Sign in
           </button>
+          {/* <a
+            href={`/api/auth/signin`}
+            className={styles.buttonPrimary}
+            onClick={(e) => {
+              e.preventDefault();
+              signIn();
+            }}
+          >
+            Sign in
+          </a> */}
         </form>
       </section>
     </div>

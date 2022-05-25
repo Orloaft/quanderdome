@@ -27,6 +27,6 @@ export default NextAuth({
       token.userRole = "admin";
       return token;
     },
-    secret: process.env.NEXTAUTH_SECRET,
+    // secret: process.env.NEXTAUTH_SECRET,
   },
 });
