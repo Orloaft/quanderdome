@@ -43,6 +43,10 @@ export const LobbyList = ({ credentials }) => {
     setScoreBoard(null);
   };
   useEffect(() => {
+    socketService.connect();
+  }, []);
+
+  useEffect(() => {
     socketService.socket.on("game_start_response", (game, shuffled) => {
       setOptions(shuffled);
       setQuestion(game.questionArray[0]);

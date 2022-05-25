@@ -23,7 +23,7 @@
   border-radius: 1rem;
   border: 2px solid var(--border-color);
   &:hover {
-    background-color: var(--border-color);
+    background-color: var(--hover-color);
     color: black;
     border: 2px solid black;
   }

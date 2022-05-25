@@ -22,6 +22,7 @@ function getActiveRooms(io) {
 const fetchGameInstance = (roomId) => {
   return gameInstances.find((instance) => instance.roomId === roomId);
 };
+// function that allows next.js to handle the server side code
 async function startServer() {
   const nextJsApp = next({ dev: true, conf: { reactStrictMode: true } });
   await nextJsApp.prepare();
@@ -104,21 +105,26 @@ async function startServer() {
           `https://opentdb.com/api.php?amount=${gameConfig.range}&category=${gameConfig.category}&difficulty=${gameConfig.difficulty}&type=multiple`
         )
         .then((result) => {
-          console.log("games started in room: " + room);
-          let newGame = new GameService();
-          newGame.roomId = room;
-          newGame.players = gameConfig.playerList.map((player) => {
-            return { id: player, life: 100, score: 0 };
-          });
-          newGame.questionArray = result.data.results;
-          newGame.roundCount = 0;
-          const shuffled = [
-            ...newGame.questionArray[newGame.roundCount].incorrect_answers,
-            newGame.questionArray[newGame.roundCount].correct_answer,
-          ].sort(() => Math.random() - 0.5);
+          if (result) {
+            console.log("games started in room: " + room + result.data);
+            // console.log(result);
+            let newGame = new GameService();
+            newGame.roomId = room;
+            newGame.players = gameConfig.playerList.map((player) => {
+              return { id: player, life: 100, score: 0 };
+            });
+            newGame.questionArray = result.data.results;
+            newGame.roundCount = 0;
+            const shuffled = [
+              ...newGame.questionArray[newGame.roundCount].incorrect_answers,
+              newGame.questionArray[newGame.roundCount].correct_answer,
+            ].sort(() => Math.random() - 0.5);
 
-          io.to(room).emit("game_start_response", newGame, shuffled);
-          gameInstances.push(newGame);
+            io.to(room).emit("game_start_response", newGame, shuffled);
+            gameInstances.push(newGame);
+          } else {
+            console.log("triviaDB req failed");
+          }
         })
         .then(() => {
           roundTimer(room, gameConfig.time);

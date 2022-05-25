@@ -45,7 +45,7 @@ export default function Home() {
     return (
       <>
         {darkTheme !== undefined && (
-          <form action="#">
+          <form className="toggle-form" action="#">
             <label className="switch">
               <input
                 type="checkbox"
@@ -58,15 +58,16 @@ export default function Home() {
             </label>
           </form>
         )}
-        <Dashboard credentials={credentials} />;
+        <Dashboard credentials={credentials} />
       </>
     );
     // }
   } else {
     return (
+      // dark theme toggle component
       <>
         {darkTheme !== undefined && (
-          <form action="#">
+          <form className="toggle-form" action="#">
             <label className="switch">
               <input
                 type="checkbox"
@@ -77,7 +78,7 @@ export default function Home() {
             </label>
           </form>
         )}
-        <LoginPage logIn={logIn} />;
+        <LoginPage logIn={logIn} />
       </>
     );
   }
