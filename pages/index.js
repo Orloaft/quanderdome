@@ -58,7 +58,7 @@ export default function Home() {
             </label>
           </form>
         )}
-        <Dashboard credentials={credentials} />
+        <Dashboard darkTheme={darkTheme} credentials={credentials} />
       </>
     );
     // }
@@ -78,7 +78,7 @@ export default function Home() {
             </label>
           </form>
         )}
-        <LoginPage logIn={logIn} />
+        <LoginPage darkTheme={darkTheme} logIn={logIn} />
       </>
     );
   }

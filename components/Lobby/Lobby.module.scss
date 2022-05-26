@@ -34,10 +34,12 @@
   }
   &__player_list {
     list-style: none;
+    color: var(--highlight-color);
   }
   &__info {
     display: flex;
     flex-direction: column;
+    font-size: 2rem;
   }
   &__box {
     width: 20rem;

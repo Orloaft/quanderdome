@@ -7,9 +7,15 @@ export const DifficultySelect = ({ handleChange }) => {
         }}
         name="difficulty"
       >
-        <option value="easy">easy</option>
-        <option value="medium">medium</option>
-        <option value="hard">hard</option>
+        <option style={{ color: "black" }} value="easy">
+          easy
+        </option>
+        <option style={{ color: "black" }} value="medium">
+          medium
+        </option>
+        <option style={{ color: "black" }} value="hard">
+          hard
+        </option>
       </select>
     </>
   );

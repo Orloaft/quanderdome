@@ -4,9 +4,9 @@ const next = require("next");
 const GameService = require("./serverServices/gameService");
 const roomInstances = [];
 const axios = require("axios");
+const { uuid } = require("uuidv4");
 // array of game objects that hold relevant data to a single gameroom instance
 const gameInstances = [];
-//timer for keeping game time
 
 // functions that returns array of active game lobbies
 function getActiveRooms(io) {
@@ -31,6 +31,8 @@ async function startServer() {
 
   const server = http.createServer(app);
   const io = require("socket.io")(server);
+
+  // for counting down until round ends
   const roundTimer = (room, time) => {
     // Set the date we're counting down to
     const countDownDate = new Date().getTime() + time * 1000;
@@ -47,7 +49,7 @@ async function startServer() {
       if (!gameInstances.find((game) => game.roomId === room)) {
         clearInterval(x);
       }
-      // If the count down is finished, write some text
+      // If the count down is finished, end the game
       if (distance < 0) {
         io.to(room).emit("game_end", fetchGameInstance(room));
         clearInterval(x);

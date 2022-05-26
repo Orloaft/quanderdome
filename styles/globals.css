@@ -18,6 +18,7 @@ body {
   --border-color: black;
   --button-color: #62bbc1;
   --health-color: #bb4430;
+  --particle-color: hsl(random(360), 70%, 50%);
 }
 
 [data-theme="dark"] {
@@ -28,6 +29,7 @@ body {
   --border-color: #def2c8;
   --button-color: #171717;
   --health-color: darkgreen;
+  --particle-color: hsl(180%, 70%, 50%);
 }
 /* swtich taken from W3 schools */
 

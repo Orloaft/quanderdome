@@ -1,6 +1,7 @@
 import { signIn, useSession } from "next-auth/react";
 import styles from "../styles/LogInPage.module.scss";
 import { useState } from "react";
+import { Particles } from "../components/Particles/Particles";
 
 export default function LoginPage({ logIn }) {
   const [nameInput, setNameInput] = useState("");
@@ -48,7 +49,7 @@ export default function LoginPage({ logIn }) {
           <h1 className={styles.login__heading}> Welcome to the QuanderDome</h1>
           <a
             href={`/api/auth/signin`}
-            className={styles.buttonPrimary}
+            className={styles.button}
             onClick={(e) => {
               e.preventDefault();
               signIn();
