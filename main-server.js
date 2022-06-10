@@ -181,6 +181,6 @@ async function startServer() {
     });
   });
 
-  server.listen(3000);
+  server.listen(process.env.PORT);
 }
 startServer();
