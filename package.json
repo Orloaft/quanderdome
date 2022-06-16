@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "node main-server.js",
     "build": "next build",
-    "start": "export NODE_ENV=dev node main-server.js -p $PORT",
+    "start": "node main-server.js -p $PORT",
     "heroku-postbuild": "npm run build"
   },
   "dependencies": {
