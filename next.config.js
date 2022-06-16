@@ -4,7 +4,5 @@ module.exports = {
   nextConfig: {
     reactStrictMode: false,
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  typescript: {},
 };
