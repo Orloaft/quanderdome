@@ -2,7 +2,7 @@
 
 module.exports = {
   nextConfig: {
-    reactStrictMode: false,
+    reactStrictMode: true,
   },
   typescript: {},
 };
