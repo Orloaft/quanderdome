@@ -124,19 +124,18 @@ async function startServer() {
       io.to(roomId).emit("room_message_received", msg);
     });
     //disconnect from lobby
-    socket.on("leave_room", (roomId, credentials, socketId) => {
+    socket.on("leave_room", async (roomId, credentials, socketId) => {
       console.log(roomId);
       let exitedRoom = roomInstances.find((instance) => instance.id === roomId);
 
       if (exitedRoom) {
-        socket.leave(exitedRoom.id);
+        await socket.leave(exitedRoom.id);
         io.to(socketId).emit("leave_room_response");
         exitedRoom.players = exitedRoom.players.filter(
           (player) => player !== credentials
         );
         if (exitedRoom.players.length === 0) {
           roomInstances = roomInstances.filter((room) => room.id !== roomId);
-          console.log(roomInstances);
           io.to(socketId).emit("show_rooms_response", roomInstances);
         } else {
           io.to(roomId).emit("update_state_response", exitedRoom);
