@@ -9,44 +9,60 @@ import { ScoreBoard } from "../ScoreBoard/ScoreBoard";
 
 export const LobbyList = ({ credentials }) => {
   const [roomList, setRoomList] = useState([]);
-  const [joining, setJoining] = useState(false);
-  const [roomId, setRoomId] = useState(null);
+  // const [joining, setJoining] = useState(false);
+  // const [roomId, setRoomId] = useState(null);
   const [question, setQuestion] = useState(null);
   const [scoreBoard, setScoreBoard] = useState(null);
   const [options, setOptions] = useState(null);
-
+  const [roomInstance, setRoomInstance] = useState({});
   async function gameStart(config) {
-    gameService.startGame(config, roomId, socketService.socket.id);
+    gameService.startGame(roomInstance.id);
   }
-
   const leaveLobby = () => {
-    socketService.socket.emit("leave_room", roomId, credentials);
-    refresh();
+    socketService.socket.emit(
+      "leave_room",
+      socketService.room,
+      credentials,
+      socketService.socket.id
+    );
   };
   async function refresh() {
     socketService.showRooms().then((rooms) => {
       setRoomList(rooms);
     });
   }
-  async function joinRoom(e) {
+  async function createRoom(e) {
     e.preventDefault();
-    socketService.joinGameRoom(
-      socketService.socket,
+    socketService.socket.emit(
+      "create_room",
       e.target.roomInput.value,
-      credentials
+      credentials,
+      socketService.socket.id
     );
-    setRoomId(e.target.roomInput.value);
-    e.target.roomInput.value = "";
+    // socketService.createGameRoom(
+    //   socketService.socket,
+    //   e.target.roomInput.value,
+    //   credentials
+    // );
   }
   const leaveScoreBoard = () => {
     refresh();
     setScoreBoard(null);
+    setRoomInstance(false);
   };
   useEffect(() => {
     socketService.connect();
   }, []);
 
   useEffect(() => {
+    socketService.socket.on("update_state_response", (instance) => {
+      const newState = { ...instance };
+      setRoomInstance(newState);
+    });
+    socketService.socket.on("create_room_response", (roomId) => {
+      console.log("created new room with id " + roomId);
+      socketService.room = roomId;
+    });
     socketService.socket.on("game_start_response", (game, shuffled) => {
       setOptions(shuffled);
       setQuestion(game.questionArray[0]);
@@ -57,14 +73,16 @@ export const LobbyList = ({ credentials }) => {
       setQuestion(question);
     });
     socketService.socket.on("leave_room_response", () => {
-      console.log("received leave room clientside");
-      setRoomId(null);
-      console.log(roomId);
+      setRoomInstance(false);
     });
-
+    socketService.socket.on("player_dead", (player) => {
+      if (player.name === credentials) {
+        leaveLobby();
+      }
+    });
     socketService.socket.on("game_end", (game) => {
-      setQuestion(false);
-      setRoomId(false);
+      console.log("game ended");
+      leaveLobby();
       refresh();
       setScoreBoard(game);
     });
@@ -79,7 +97,7 @@ export const LobbyList = ({ credentials }) => {
           credentials={credentials}
         /> //display scoreboard when returning from game
       ) : (
-        (!roomId && ( //if no room id exist, render lobby form and list
+        (!roomInstance.id && ( //if no room id exist, render lobby form and list
           <>
             <span className={styles.username}>
               Signed in as <span>{credentials}</span>
@@ -87,7 +105,7 @@ export const LobbyList = ({ credentials }) => {
             <form
               className={styles.join_lobby}
               onSubmit={(e) => {
-                joinRoom(e);
+                createRoom(e);
               }}
             >
               <span> Create room</span>
@@ -97,12 +115,8 @@ export const LobbyList = ({ credentials }) => {
                 name="roomInput"
                 autoComplete="off"
               ></input>
-              <button
-                className={styles.button}
-                type="submit"
-                disabled={joining}
-              >
-                {joining ? "Creating..." : "Create"}
+              <button className={styles.button} type="submit">
+                Create
               </button>
             </form>
             <section className={styles.lobbies}>
@@ -115,15 +129,14 @@ export const LobbyList = ({ credentials }) => {
                         e.preventDefault();
                         socketService.joinGameRoom(
                           socketService.socket,
-                          room,
+                          room.id,
                           credentials
                         );
-                        setRoomId(room);
                       }}
                       className={styles.lobbies__list_item}
                       key={uuidv4()}
                     >
-                      <span>{room}</span>
+                      <span>{room.name}</span>
                     </li>
                   );
                 })}
@@ -139,20 +152,20 @@ export const LobbyList = ({ credentials }) => {
             </section>
           </>
         )) ||
-        (question ? ( //render lobby if question was not provided by server
+        (roomInstance.currentTrivia.question ? ( //render lobby if question was not provided by server
           <GameRoom
             question={question}
             options={options}
             leaveLobby={leaveLobby}
-            roomId={roomId}
+            room={roomInstance}
             credentials={credentials}
           />
         ) : (
           <Lobby
-            leaveLobby={leaveLobby}
-            roomId={roomId}
+            roomInstance={roomInstance}
             gameStart={gameStart}
             credentials={credentials}
+            leaveLobby={leaveLobby}
           />
         ))
       )}

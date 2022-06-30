@@ -6,11 +6,11 @@ export const ScoreBoard = ({ game, handleLeave }) => {
       <div className={styles.scoreBoard}>
         <h1>Match Concluded!</h1>
         <ul className={styles.scoreBoard__list}>
-          {game.players.map((player) => {
+          {game.scores.map((player) => {
             return (
               <>
                 <li className={styles.username} key={uuidv4()}>
-                  {player.id}:
+                  {player.name}:
                 </li>
                 <li key={uuidv4()}>{player.score} points</li>
               </>

@@ -1,4 +1,4 @@
-export const CategorySelect = ({ handleChange }) => {
+export const CategorySelect = ({ handleChange, category }) => {
   return (
     <>
       <select
@@ -6,6 +6,7 @@ export const CategorySelect = ({ handleChange }) => {
           handleChange(e);
         }}
         name="category"
+        value={category}
       >
         <option style={{ color: "black" }} value="9">
           General Knowledge

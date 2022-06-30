@@ -5,14 +5,14 @@ class gameService {
   question = null;
   lifeTotal = 100;
   questionArray = null;
-  async startGame(gameConfig, room, socketId) {
+  async startGame(roomId) {
     return new Promise((rs, rj) => {
-      socketService.socket.emit("game_start", gameConfig, room, socketId);
-      socketService.socket.on("game_start_response", (questions, socketId) => {
-        this.questionArray = questions;
-        this.question = questions[0];
-        rs(this.question);
-      });
+      socketService.socket.emit("game_start", roomId);
+      // socketService.socket.on("game_start_response", (questions, socketId) => {
+      //   this.questionArray = questions;
+      //   this.question = questions[0];
+      //   rs(this.question);
+      // });
     });
   }
   async nextRound(room) {

@@ -1,4 +1,4 @@
-export const DifficultySelect = ({ handleChange }) => {
+export const DifficultySelect = ({ handleChange, difficulty }) => {
   return (
     <>
       <select
@@ -6,6 +6,7 @@ export const DifficultySelect = ({ handleChange }) => {
           handleChange(e);
         }}
         name="difficulty"
+        value={difficulty}
       >
         <option style={{ color: "black" }} value="easy">
           easy

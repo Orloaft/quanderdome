@@ -4,16 +4,17 @@ import socketService from "../../services/socketService";
 import { useEffect, useState } from "react";
 import he from "he";
 export const QuestionComponent = ({
-  question,
+  // question,
   submitAnswer,
   roomId,
-  options,
+  // options,
+  currentTrivia,
 }) => {
   //function to remove special characters (noSpecialCharacters)
   const nsc = (str) => {
     return he.decode(str);
   };
-  const [answers, setAnswers] = useState([]);
+  const answers = currentTrivia.chosenAnswers;
 
   useEffect(() => {
     socketService.socket.on("submit_answer_response", (answers) => {
@@ -22,11 +23,11 @@ export const QuestionComponent = ({
   }, []);
   return (
     <div className={styles.question}>
-      <span>{nsc(question.category)}</span>
-      <span>{nsc(question.question)}</span>
+      <span>{nsc(currentTrivia.question.category)}</span>
+      <span>{nsc(currentTrivia.question.question)}</span>
       <ul>
-        {options &&
-          options.map((answer) => {
+        {currentTrivia.question &&
+          currentTrivia.options.map((answer) => {
             return (
               <button
                 className={

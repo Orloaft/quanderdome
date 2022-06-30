@@ -2,40 +2,29 @@ import styles from "./GameConfig.module.scss";
 import { CategorySelect } from "../CategorySelect/CategorySelect";
 import { DifficultySelect } from "../DifficultySelect/DifficultySelect";
 import { useState } from "react";
+import socketService from "../../services/socketService";
 
-export const GameConfig = ({ playerList, gameStart }) => {
-  const [questionRange, setQuestionRange] = useState("1");
-  const [questionDifficulty, setQuestionDifficulty] = useState("easy");
-  const [questionCategory, setQuestionCategory] = useState("9");
-  const [roundTime, setRoundTime] = useState(0);
-
+export const GameConfig = ({ roomId, playerList, gameStart, settings }) => {
   const handleDifficultyChange = (e) => {
     e.preventDefault();
-    setQuestionDifficulty(e.target.value);
+    socketService.socket.emit("update_difficulty", e.target.value, roomId);
   };
   const handleCategoryChange = (e) => {
     e.preventDefault();
-    setQuestionCategory(e.target.value);
+    socketService.socket.emit("update_category", e.target.value, roomId);
   };
   const handleTimeChange = (e) => {
     e.preventDefault();
-    setRoundTime(e.target.value);
+    socketService.socket.emit("update_time", e.target.value, roomId);
   };
   const handleRangeChange = (e) => {
     e.preventDefault();
-    setQuestionRange(e.target.value);
+    socketService.socket.emit("update_range", e.target.value, roomId);
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    const gameConfig = {
-      range: questionRange,
-      category: questionCategory,
-      difficulty: questionDifficulty,
-      time: roundTime,
-      playerList: playerList,
-    };
-    console.log(gameConfig);
-    gameStart(gameConfig);
+
+    gameStart();
   };
   return (
     <>
@@ -47,7 +36,7 @@ export const GameConfig = ({ playerList, gameStart }) => {
           }}
           className={styles.config__form}
         >
-          <label htmlFor="time">{roundTime} Seconds</label>
+          <label htmlFor="time">{settings.time} Seconds</label>
           <input
             className={styles.input}
             onChange={(e) => {
@@ -58,7 +47,7 @@ export const GameConfig = ({ playerList, gameStart }) => {
             min="0"
             max="600"
           ></input>
-          <label htmlFor="range">{questionRange} Questions</label>
+          <label htmlFor="range">{settings.questions} Questions</label>
           <input
             className={styles.input}
             onChange={(e) => {
@@ -69,8 +58,14 @@ export const GameConfig = ({ playerList, gameStart }) => {
             min="1"
             max="30"
           ></input>
-          <CategorySelect handleChange={handleCategoryChange} />
-          <DifficultySelect handleChange={handleDifficultyChange} />
+          <CategorySelect
+            handleChange={handleCategoryChange}
+            category={settings.category}
+          />
+          <DifficultySelect
+            handleChange={handleDifficultyChange}
+            difficulty={settings.difficulty}
+          />
           <button className={styles.button} type="submit" disabled={false}>
             Start game
           </button>

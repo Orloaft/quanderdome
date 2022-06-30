@@ -3,15 +3,14 @@ import socketService from "../../services/socketService";
 import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { GameConfig } from "../GameConfig/GameConfig";
-export const Lobby = ({ roomId, leaveLobby, gameStart, credentials }) => {
+export const Lobby = ({ roomInstance, leaveLobby, gameStart, credentials }) => {
   const [chat, setChat] = useState([]);
-  const [playerList, setPlayerList] = useState([]);
 
   async function messageSubmit(e) {
     e.preventDefault();
 
     return new Promise((rs, rj) => {
-      socketService.socket.emit("room_message", roomId, {
+      socketService.socket.emit("room_message", roomInstance.id, {
         body: e.target.message.value,
         id: credentials,
       });
@@ -21,10 +20,6 @@ export const Lobby = ({ roomId, leaveLobby, gameStart, credentials }) => {
     });
   }
   useEffect(() => {
-    socketService.socket.on("player_list", (roomInstance) => {
-      setPlayerList(roomInstance.players);
-      console.log(roomInstance);
-    });
     socketService.socket.on("room_message_received", (msg) => {
       let updatedChat = [...chat];
       updatedChat.unshift(msg);
@@ -36,13 +31,14 @@ export const Lobby = ({ roomId, leaveLobby, gameStart, credentials }) => {
     <>
       <section className={styles.chat}>
         <div className={styles.chat__info}>
-          <span>Lobby: {roomId}</span>
+          <span>Lobby: {roomInstance.name}</span>
           <span>Players:</span>
 
           <ul className={styles.chat__player_list}>
-            {playerList.map((player) => {
-              return <li key={uuidv4()}>{player}</li>;
-            })}
+            {roomInstance &&
+              roomInstance.players.map((player) => {
+                return <li key={uuidv4()}>{player}</li>;
+              })}
           </ul>
         </div>
         <div className={styles.chat__container}>
@@ -78,14 +74,15 @@ export const Lobby = ({ roomId, leaveLobby, gameStart, credentials }) => {
           }
         >
           <GameConfig
-            roomId={roomId}
+            roomId={roomInstance.id}
             gameStart={gameStart}
-            playerList={playerList}
+            playerList={roomInstance.players}
+            settings={roomInstance.settings}
           />
           <button
             className={styles.button}
             onClick={() => {
-              socketService.socket.emit("leave_room", roomId, credentials);
+              // socketService.socket.emit("leave_room", roomId, credentials);
               setChat([]);
               leaveLobby();
             }}
