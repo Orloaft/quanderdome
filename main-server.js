@@ -198,6 +198,7 @@ async function startServer() {
               ].sort(() => Math.random() - 0.5),
             };
             room.currentTrivia = newRound;
+            roundTimer(roomId, room.settings.time);
             // const shuffled = [
             //   ...newGame.questionArray[newGame.roundCount].incorrect_answers,
             //   newGame.questionArray[newGame.roundCount].correct_answer,
@@ -210,7 +211,6 @@ async function startServer() {
           }
         })
         .then(() => {
-          roundTimer(roomId, room.settings.time);
           io.to(roomId).emit("update_state_response", room);
         });
     });
