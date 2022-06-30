@@ -39,11 +39,6 @@ export const LobbyList = ({ credentials }) => {
       credentials,
       socketService.socket.id
     );
-    // socketService.createGameRoom(
-    //   socketService.socket,
-    //   e.target.roomInput.value,
-    //   credentials
-    // );
   }
   const leaveScoreBoard = () => {
     refresh();
@@ -127,11 +122,13 @@ export const LobbyList = ({ credentials }) => {
                     <li
                       onClick={(e) => {
                         e.preventDefault();
-                        socketService.joinGameRoom(
-                          socketService.socket,
-                          room.id,
-                          credentials
-                        );
+                        if (room.joinable) {
+                          socketService.joinGameRoom(
+                            socketService.socket,
+                            room.id,
+                            credentials
+                          );
+                        }
                       }}
                       className={styles.lobbies__list_item}
                       key={uuidv4()}
