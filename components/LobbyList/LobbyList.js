@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Lobby } from "../Lobby/Lobby";
 import { GameRoom } from "../GameRoom/GameRoom";
-import gameService from "../../services/gameService";
+
 import { ScoreBoard } from "../ScoreBoard/ScoreBoard";
 
 export const LobbyList = ({ credentials }) => {
@@ -71,11 +71,7 @@ export const LobbyList = ({ credentials }) => {
     socketService.socket.on("leave_room_response", () => {
       setRoomInstance(false);
     });
-    socketService.socket.on("player_dead", (player) => {
-      if (player.name === credentials) {
-        leaveLobby();
-      }
-    });
+
     socketService.socket.on("game_end", (game) => {
       console.log("game ended");
       leaveLobby();

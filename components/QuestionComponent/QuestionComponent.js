@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import socketService from "../../services/socketService";
 import { useEffect, useState } from "react";
 import he from "he";
-export const QuestionComponent = ({ submitAnswer }) => {
+export const QuestionComponent = ({ submitAnswer, credentials }) => {
   //function to remove special characters (noSpecialCharacters)
   const nsc = (str) => {
     return he.decode(str);
@@ -21,7 +21,10 @@ export const QuestionComponent = ({ submitAnswer }) => {
       <span>{nsc(currentTrivia.question.category)}</span>
       <span>{nsc(currentTrivia.question.question)}</span>
       <ul>
-        {currentTrivia.question &&
+        {(currentTrivia.question &&
+          socketService.roomInstance.scores.find(
+            (player) => player.name === credentials
+          ).life > 0 &&
           currentTrivia.options.map((answer) => {
             return (
               <button
@@ -37,7 +40,7 @@ export const QuestionComponent = ({ submitAnswer }) => {
                 {nsc(answer)}
               </button>
             );
-          })}
+          })) || <p>Player defeated</p>}
       </ul>
     </div>
   );

@@ -1,22 +1,9 @@
 const http = require("http");
 const express = require("express");
 const next = require("next");
-const GameService = require("./serverServices/gameService");
 let roomInstances = [];
 const axios = require("axios");
 const { uuid } = require("uuidv4");
-// array of game objects that hold relevant data to a single gameroom instance
-const gameInstances = [];
-
-// functions that returns array of active game lobbies
-function getActiveRooms(io) {
-  // const arr = Array.from(io.sockets.adapter.rooms);
-  // //filter out extra rooms that each socket starts in
-  // const filtered = arr.filter((room) => !room[1].has(room[0]));
-  // // Return only the room name:
-  // const res = filtered.map((i) => i[0]);
-  // return res;
-}
 
 //returns room instance that matches a roomId
 const fetchRoomInstance = (roomId) => {
@@ -46,6 +33,11 @@ async function startServer() {
       const distance = countDownDate - now;
       room.time = Math.floor(distance / 1000);
       io.to(room.id).emit("update_state_response", room);
+      if (!room.scores.find((player) => player.life > 0)) {
+        io.to(room.id).emit("game_end", room);
+        roomInstances = roomInstances.filter((room) => room.id !== roomId);
+        clearInterval(x);
+      }
       if (!room) {
         clearInterval(x);
       }
@@ -249,14 +241,8 @@ async function startServer() {
           //check if player depleted their hp
           if (player.life <= 0) {
             player.score = 0;
-            io.to(game.id).emit("player_dead", player);
+            // io.to(game.id).emit("player_dead", player);
             // end game instance if all players perish
-            if (game.players.find((player) => player.life > 0)) {
-              io.to(game.id).emit("game_end", game);
-              roomInstances = roomInstances.filter(
-                (room) => room.id !== roomId
-              );
-            }
           }
         }
       }

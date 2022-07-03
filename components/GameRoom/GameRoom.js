@@ -20,7 +20,10 @@ export const GameRoom = ({ room, credentials }) => {
       <h1 className={styles.time}>{roomInstance.time}</h1>
 
       {roomInstance.currentTrivia && (
-        <QuestionComponent submitAnswer={submitAnswer} />
+        <QuestionComponent
+          submitAnswer={submitAnswer}
+          credentials={credentials}
+        />
       )}
       <div className={styles.score_container}>
         <HealthBar
