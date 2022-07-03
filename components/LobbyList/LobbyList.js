@@ -71,7 +71,9 @@ export const LobbyList = ({ credentials }) => {
     socketService.socket.on("leave_room_response", () => {
       setRoomInstance(false);
     });
-
+    socketService.socket.on("trivia_error", () => {
+      alert("uh oh, trivia is having difficulties. please try again.");
+    });
     socketService.socket.on("game_end", (game) => {
       console.log("game ended");
       leaveLobby();

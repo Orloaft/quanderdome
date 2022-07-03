@@ -200,6 +200,7 @@ async function startServer() {
             // gameInstances.push(newGame);
           } else {
             console.log("triviaDB req failed");
+            io.to(roomId).emit("trivia_error");
           }
         })
         .then(() => {
