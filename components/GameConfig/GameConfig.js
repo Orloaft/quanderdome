@@ -4,28 +4,45 @@ import { DifficultySelect } from "../DifficultySelect/DifficultySelect";
 import { useState } from "react";
 import socketService from "../../services/socketService";
 
-export const GameConfig = ({ roomId, playerList, gameStart, settings }) => {
+export const GameConfig = ({ gameStart }) => {
   const handleDifficultyChange = (e) => {
     e.preventDefault();
-    socketService.socket.emit("update_difficulty", e.target.value, roomId);
+    socketService.socket.emit(
+      "update_difficulty",
+      e.target.value,
+      socketService.roomInstance.id
+    );
   };
   const handleCategoryChange = (e) => {
     e.preventDefault();
-    socketService.socket.emit("update_category", e.target.value, roomId);
+    socketService.socket.emit(
+      "update_category",
+      e.target.value,
+      socketService.roomInstance.id
+    );
   };
   const handleTimeChange = (e) => {
     e.preventDefault();
-    socketService.socket.emit("update_time", e.target.value, roomId);
+    socketService.socket.emit(
+      "update_time",
+      e.target.value,
+      socketService.roomInstance.id
+    );
   };
   const handleRangeChange = (e) => {
     e.preventDefault();
-    socketService.socket.emit("update_range", e.target.value, roomId);
+    socketService.socket.emit(
+      "update_range",
+      e.target.value,
+      socketService.roomInstance.id
+    );
   };
   const handleSubmit = (e) => {
     e.preventDefault();
 
     gameStart();
   };
+  const { settings } = socketService.roomInstance;
   return (
     <>
       <div className={styles.config}>

@@ -15,8 +15,8 @@ export const LobbyList = ({ credentials }) => {
   const [scoreBoard, setScoreBoard] = useState(null);
   const [options, setOptions] = useState(null);
   const [roomInstance, setRoomInstance] = useState({});
-  async function gameStart(config) {
-    gameService.startGame(roomInstance.id);
+  function gameStart() {
+    socketService.socket.emit("game_start", socketService.roomInstance.id);
   }
   const leaveLobby = () => {
     socketService.socket.emit(
@@ -52,6 +52,7 @@ export const LobbyList = ({ credentials }) => {
   useEffect(() => {
     socketService.socket.on("update_state_response", (instance) => {
       const newState = { ...instance };
+      socketService.roomInstance = instance;
       setRoomInstance(newState);
     });
     socketService.socket.on("create_room_response", (roomId) => {
@@ -150,16 +151,9 @@ export const LobbyList = ({ credentials }) => {
           </>
         )) ||
         (roomInstance.currentTrivia.question ? ( //render lobby if question was not provided by server
-          <GameRoom
-            question={question}
-            options={options}
-            leaveLobby={leaveLobby}
-            room={roomInstance}
-            credentials={credentials}
-          />
+          <GameRoom leaveLobby={leaveLobby} credentials={credentials} />
         ) : (
           <Lobby
-            roomInstance={roomInstance}
             gameStart={gameStart}
             credentials={credentials}
             leaveLobby={leaveLobby}

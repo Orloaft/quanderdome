@@ -5,6 +5,7 @@ class SocketService {
   // socket instance that will persist across all components
   socket = null;
   room = null;
+  roomInstance = null;
   //method to initiate socket instance
   async connect(url) {
     return new Promise((rs, rj) => {

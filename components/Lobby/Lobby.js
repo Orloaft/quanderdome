@@ -3,9 +3,9 @@ import socketService from "../../services/socketService";
 import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { GameConfig } from "../GameConfig/GameConfig";
-export const Lobby = ({ roomInstance, leaveLobby, gameStart, credentials }) => {
+export const Lobby = ({ leaveLobby, gameStart, credentials }) => {
   const [chat, setChat] = useState([]);
-
+  const { roomInstance } = socketService;
   async function messageSubmit(e) {
     e.preventDefault();
 
@@ -26,71 +26,67 @@ export const Lobby = ({ roomInstance, leaveLobby, gameStart, credentials }) => {
       setChat(updatedChat);
     });
   });
+  if (roomInstance) {
+    return (
+      <>
+        <section className={styles.chat}>
+          <div className={styles.chat__info}>
+            <span>Lobby: {roomInstance.name}</span>
+            <span>Players:</span>
 
-  return (
-    <>
-      <section className={styles.chat}>
-        <div className={styles.chat__info}>
-          <span>Lobby: {roomInstance.name}</span>
-          <span>Players:</span>
-
-          <ul className={styles.chat__player_list}>
-            {roomInstance &&
-              roomInstance.players.map((player) => {
-                return <li key={uuidv4()}>{player}</li>;
+            <ul className={styles.chat__player_list}>
+              {roomInstance &&
+                roomInstance.players.map((player) => {
+                  return <li key={uuidv4()}>{player}</li>;
+                })}
+            </ul>
+          </div>
+          <div className={styles.chat__container}>
+            <label className={styles.chat__box_label} htmlFor="chat">
+              Chat
+            </label>
+            <ul className={styles.chat__box} name="chat">
+              {chat.map((msg) => {
+                return <li key={uuidv4()}>{msg.id + ": " + msg.body}</li>;
               })}
-          </ul>
-        </div>
-        <div className={styles.chat__container}>
-          <label className={styles.chat__box_label} htmlFor="chat">
-            Chat
-          </label>
-          <ul className={styles.chat__box} name="chat">
-            {chat.map((msg) => {
-              return <li key={uuidv4()}>{msg.id + ": " + msg.body}</li>;
-            })}
-          </ul>
-          <form
-            className={styles.chat__form}
-            onSubmit={(e) => {
-              messageSubmit(e);
-            }}
+            </ul>
+            <form
+              className={styles.chat__form}
+              onSubmit={(e) => {
+                messageSubmit(e);
+              }}
+            >
+              <span className={styles.chat__label}> Send a message</span>
+              <input
+                className={styles.input}
+                type="text"
+                name="message"
+                autoComplete="off"
+              ></input>
+              <button className={styles.button} type="submit">
+                Send
+              </button>
+            </form>
+          </div>
+          <div
+            className={
+              styles.chat__container + " " + styles.chat__container_config
+            }
           >
-            <span className={styles.chat__label}> Send a message</span>
-            <input
-              className={styles.input}
-              type="text"
-              name="message"
-              autoComplete="off"
-            ></input>
-            <button className={styles.button} type="submit">
-              Send
+            <GameConfig gameStart={gameStart} />
+            <button
+              className={styles.button}
+              onClick={() => {
+                // socketService.socket.emit("leave_room", roomId, credentials);
+                setChat([]);
+                leaveLobby();
+              }}
+            >
+              Leave lobby
             </button>
-          </form>
-        </div>
-        <div
-          className={
-            styles.chat__container + " " + styles.chat__container_config
-          }
-        >
-          <GameConfig
-            roomId={roomInstance.id}
-            gameStart={gameStart}
-            playerList={roomInstance.players}
-            settings={roomInstance.settings}
-          />
-          <button
-            className={styles.button}
-            onClick={() => {
-              // socketService.socket.emit("leave_room", roomId, credentials);
-              setChat([]);
-              leaveLobby();
-            }}
-          >
-            Leave lobby
-          </button>
-        </div>
-      </section>
-    </>
-  );
+          </div>
+        </section>
+      </>
+    );
+  }
 };

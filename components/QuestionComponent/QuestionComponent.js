@@ -3,17 +3,12 @@ import { v4 as uuidv4 } from "uuid";
 import socketService from "../../services/socketService";
 import { useEffect, useState } from "react";
 import he from "he";
-export const QuestionComponent = ({
-  // question,
-  submitAnswer,
-  roomId,
-  // options,
-  currentTrivia,
-}) => {
+export const QuestionComponent = ({ submitAnswer }) => {
   //function to remove special characters (noSpecialCharacters)
   const nsc = (str) => {
     return he.decode(str);
   };
+  const { currentTrivia } = socketService.roomInstance;
   const answers = currentTrivia.chosenAnswers;
 
   useEffect(() => {
@@ -35,7 +30,7 @@ export const QuestionComponent = ({
                 }
                 key={uuidv4()}
                 onClick={() => {
-                  submitAnswer(answer, roomId);
+                  submitAnswer(answer, socketService.roomInstance.id);
                 }}
                 disabled={answers.includes(answer)}
               >
