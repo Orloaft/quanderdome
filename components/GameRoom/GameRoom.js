@@ -3,8 +3,9 @@ import socketService from "../../services/socketService";
 import { useState, useEffect } from "react";
 import { QuestionComponent } from "../QuestionComponent/QuestionComponent";
 import { HealthBar } from "../HealthBar/HealthBar";
+import { ScoreBox } from "../ScoreBox/ScoreBox";
 
-export const GameRoom = ({ room, credentials }) => {
+export const GameRoom = ({ credentials }) => {
   const { roomInstance } = socketService;
   const submitAnswer = (answer) => {
     socketService.socket.emit(
@@ -20,10 +21,13 @@ export const GameRoom = ({ room, credentials }) => {
       <h1 className={styles.time}>{roomInstance.time}</h1>
 
       {roomInstance.currentTrivia && (
-        <QuestionComponent
-          submitAnswer={submitAnswer}
-          credentials={credentials}
-        />
+        <>
+          <ScoreBox credentials={credentials} />
+          <QuestionComponent
+            submitAnswer={submitAnswer}
+            credentials={credentials}
+          />
+        </>
       )}
       <div className={styles.score_container}>
         <HealthBar

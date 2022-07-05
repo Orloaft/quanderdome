@@ -8,6 +8,17 @@ export const QuestionComponent = ({ submitAnswer, credentials }) => {
   const nsc = (str) => {
     return he.decode(str);
   };
+  let isEliminated = () => {
+    if (
+      socketService.roomInstance.scores.find(
+        (player) => player.name === credentials
+      ).life <= 0
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
   const { currentTrivia } = socketService.roomInstance;
   const answers = currentTrivia.chosenAnswers;
 
@@ -22,9 +33,6 @@ export const QuestionComponent = ({ submitAnswer, credentials }) => {
       <span>{nsc(currentTrivia.question.question)}</span>
       <ul>
         {(currentTrivia.question &&
-          socketService.roomInstance.scores.find(
-            (player) => player.name === credentials
-          ).life > 0 &&
           currentTrivia.options.map((answer) => {
             return (
               <button
@@ -35,7 +43,7 @@ export const QuestionComponent = ({ submitAnswer, credentials }) => {
                 onClick={() => {
                   submitAnswer(answer, socketService.roomInstance.id);
                 }}
-                disabled={answers.includes(answer)}
+                disabled={answers.includes(answer) || isEliminated()}
               >
                 {nsc(answer)}
               </button>
