@@ -22,6 +22,9 @@ export const GameRoom = ({ credentials }) => {
 
       {roomInstance.currentTrivia && (
         <>
+          <div className={styles.round_count}>
+            Round {roomInstance.roundCount}/{roomInstance.trivia.length}
+          </div>
           <ScoreBox credentials={credentials} />
           <QuestionComponent
             submitAnswer={submitAnswer}

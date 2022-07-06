@@ -32,7 +32,7 @@ export const QuestionComponent = ({ submitAnswer, credentials }) => {
       <span>{nsc(currentTrivia.question.category)}</span>
       <span>{nsc(currentTrivia.question.question)}</span>
       <ul>
-        {(currentTrivia.question &&
+        {currentTrivia.question &&
           currentTrivia.options.map((answer) => {
             return (
               <button
@@ -48,7 +48,19 @@ export const QuestionComponent = ({ submitAnswer, credentials }) => {
                 {nsc(answer)}
               </button>
             );
-          })) || <p>Player defeated</p>}
+          })}
+        <button
+          className={styles.answer}
+          onClick={() => {
+            socketService.socket.emit(
+              "skip_question",
+              credentials,
+              socketService.roomInstance.id
+            );
+          }}
+        >
+          skip
+        </button>
       </ul>
     </div>
   );
