@@ -51,6 +51,9 @@ export const LobbyList = ({ credentials, signOut }) => {
   }, []);
 
   useEffect(() => {
+    socketService.socket.on("show_rooms_response", (rooms) => {
+      setRoomList(rooms);
+    });
     socketService.socket.on("update_state_response", (instance) => {
       const newState = { ...instance };
       socketService.roomInstance = instance;

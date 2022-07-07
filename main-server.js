@@ -91,6 +91,7 @@ async function startServer() {
         "player_list",
         roomInstances.find((instance) => instance.id === roomId)
       );
+      io.emit("show_rooms_response", roomInstances);
     });
     //endpoint for joining lobbies
     socket.on("join_room", function (roomId, credentials) {
@@ -128,7 +129,7 @@ async function startServer() {
         );
         if (exitedRoom.players.length === 0) {
           roomInstances = roomInstances.filter((room) => room.id !== roomId);
-          io.to(socketId).emit("show_rooms_response", roomInstances);
+          io.emit("show_rooms_response", roomInstances);
         } else {
           io.to(roomId).emit("update_state_response", exitedRoom);
           console.log("leaving room: " + exitedRoom.name);
