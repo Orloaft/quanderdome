@@ -29,6 +29,21 @@ export const GameConfig = ({ gameStart }) => {
       socketService.roomInstance.id
     );
   };
+  const handleSkipChange = (e) => {
+    if (!e.target.checked) {
+      socketService.socket.emit(
+        "update_canSkip",
+        false,
+        socketService.roomInstance.id
+      );
+    } else {
+      socketService.socket.emit(
+        "update_canSkip",
+        true,
+        socketService.roomInstance.id
+      );
+    }
+  };
   const handleRangeChange = (e) => {
     e.preventDefault();
     socketService.socket.emit(
@@ -83,6 +98,23 @@ export const GameConfig = ({ gameStart }) => {
             handleChange={handleDifficultyChange}
             difficulty={settings.difficulty}
           />
+          <form id="skip" className="toggle-form toggle-form--skip" action="#">
+            <label htmlFor="skip">
+              {(socketService.roomInstance.settings.canSkip && `Allow skips`) ||
+                `No skipping`}
+            </label>
+            <label className="switch">
+              <input
+                type="checkbox"
+                value={true}
+                onChange={(e) => {
+                  handleSkipChange(e);
+                }}
+              />
+              <span className="slider"></span>
+            </label>
+          </form>
+
           <button className={styles.button} type="submit" disabled={false}>
             Start game
           </button>

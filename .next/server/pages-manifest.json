@@ -1,12 +1,7 @@
 {
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
-  "/Dashboard": "pages/Dashboard.html",
-  "/LoginPage": "pages/LoginPage.html",
-  "/api/auth/[...nextauth]": "pages/api/auth/[...nextauth].js",
-  "/api/hello": "pages/api/hello.js",
-  "/api/socketio": "pages/api/socketio.js",
-  "/": "pages/index.html",
   "/_document": "pages/_document.js",
-  "/404": "pages/404.html"
+  "/": "pages/index.js",
+  "/api/auth/[...nextauth]": "pages/api/auth/[...nextauth].js"
 }

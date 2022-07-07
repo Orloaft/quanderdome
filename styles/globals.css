@@ -98,3 +98,9 @@ input:checked + .slider:before {
   top: 15%;
   right: 5%;
 }
+.toggle-form--skip {
+  position: relative;
+  transform: scale(0.75);
+  left: 3rem;
+  font-size: 1.5rem;
+}

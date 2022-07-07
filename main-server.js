@@ -164,6 +164,14 @@ async function startServer() {
         roomInstances.find((room) => room.id === id)
       );
     });
+    socket.on("update_canSkip", (skip, id) => {
+      roomInstances.find((room) => room.id === id).settings.canSkip = skip;
+      console.log(skip);
+      io.to(id).emit(
+        "update_state_response",
+        roomInstances.find((room) => room.id === id)
+      );
+    });
     //make call to Trivia db based on config passed from client and initiate game instance
     socket.on("game_start", async (roomId) => {
       let room = roomInstances.find((room) => room.id === roomId);

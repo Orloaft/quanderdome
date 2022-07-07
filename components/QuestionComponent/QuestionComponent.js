@@ -48,19 +48,21 @@ export const QuestionComponent = ({ submitAnswer, credentials }) => {
                 {nsc(answer)}
               </button>
             );
-          })}
-        <button
-          className={styles.answer}
-          onClick={() => {
-            socketService.socket.emit(
-              "skip_question",
-              credentials,
-              socketService.roomInstance.id
-            );
-          }}
-        >
-          skip
-        </button>
+          })}{" "}
+        {socketService.roomInstance.settings.canSkip && (
+          <button
+            className={styles.answer}
+            onClick={() => {
+              socketService.socket.emit(
+                "skip_question",
+                credentials,
+                socketService.roomInstance.id
+              );
+            }}
+          >
+            skip
+          </button>
+        )}
       </ul>
     </div>
   );

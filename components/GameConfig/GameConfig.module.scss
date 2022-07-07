@@ -41,3 +41,14 @@
   font-size: 1rem;
   color: var(--border-color);
 }
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 1.75rem;
+  height: 1.125rem;
+  & span {
+    position: absolute;
+    left: 2rem;
+  }
+}
