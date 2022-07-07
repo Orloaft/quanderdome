@@ -50,6 +50,9 @@
   position: absolute;
   left: 10%;
   top: 10%;
-  font-size: 2rem;
+  font-size: 1rem;
   color: var(--font-color);
+  @media (min-width: 48rem) {
+    font-size: 2rem;
+  }
 }

@@ -36,7 +36,20 @@
     margin: 20% 0 0 0;
     font-size: 3rem;
     color: var(--border-color);
+
     @include tablet {
+      top: 0;
+      font-size: 4rem;
+      margin: 0;
+    }
+  }
+  &__heading_lobby {
+    margin: 20% 0 0 0;
+    font-size: 3rem;
+    color: var(--border-color);
+    visibility: hidden;
+    @include tablet {
+      visibility: unset;
       top: 0;
       font-size: 4rem;
       margin: 0;

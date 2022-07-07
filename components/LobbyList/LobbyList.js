@@ -9,11 +9,8 @@ import { ScoreBoard } from "../ScoreBoard/ScoreBoard";
 
 export const LobbyList = ({ credentials }) => {
   const [roomList, setRoomList] = useState([]);
-  // const [joining, setJoining] = useState(false);
-  // const [roomId, setRoomId] = useState(null);
-  const [question, setQuestion] = useState(null);
+  const [validateRoom, setValidateRoom] = useState("");
   const [scoreBoard, setScoreBoard] = useState(null);
-  const [options, setOptions] = useState(null);
   const [roomInstance, setRoomInstance] = useState({});
   function gameStart() {
     socketService.socket.emit("game_start", socketService.roomInstance.id);
@@ -33,12 +30,16 @@ export const LobbyList = ({ credentials }) => {
   }
   async function createRoom(e) {
     e.preventDefault();
-    socketService.socket.emit(
-      "create_room",
-      e.target.roomInput.value,
-      credentials,
-      socketService.socket.id
-    );
+    if (e.target.roomInput.value) {
+      socketService.socket.emit(
+        "create_room",
+        e.target.roomInput.value,
+        credentials,
+        socketService.socket.id
+      );
+    } else {
+      setValidateRoom("please enter room name");
+    }
   }
   const leaveScoreBoard = () => {
     refresh();
@@ -59,15 +60,7 @@ export const LobbyList = ({ credentials }) => {
       console.log("created new room with id " + roomId);
       socketService.room = roomId;
     });
-    socketService.socket.on("game_start_response", (game, shuffled) => {
-      setOptions(shuffled);
-      setQuestion(game.questionArray[0]);
-    });
-    socketService.socket.on("round_end_response", (question, shuffled) => {
-      console.log("ending round");
-      setOptions(shuffled);
-      setQuestion(question);
-    });
+
     socketService.socket.on("leave_room_response", () => {
       setRoomInstance(false);
     });
@@ -108,7 +101,9 @@ export const LobbyList = ({ credentials }) => {
                 type="text"
                 name="roomInput"
                 autoComplete="off"
+                onChange={() => setValidateRoom("")}
               ></input>
+              {validateRoom}
               <button className={styles.button} type="submit">
                 Create
               </button>
