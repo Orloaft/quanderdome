@@ -52,7 +52,8 @@ export const QuestionComponent = ({ submitAnswer, credentials }) => {
         {socketService.roomInstance.settings.canSkip && (
           <button
             className={styles.answer}
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault();
               socketService.socket.emit(
                 "skip_question",
                 credentials,
