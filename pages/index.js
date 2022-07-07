@@ -18,6 +18,9 @@ export default function Home() {
       document.documentElement.removeAttribute("data-theme");
     }
   };
+  const signOut = () => {
+    setCredentials(false);
+  };
   //on initial render if temporary usernme is stored then set the state variable and render dashboard
   useEffect(() => {
     if (window.localStorage.getItem("username")) {
@@ -58,7 +61,11 @@ export default function Home() {
             </label>
           </form>
         )}
-        <Dashboard darkTheme={darkTheme} credentials={credentials} />
+        <Dashboard
+          darkTheme={darkTheme}
+          credentials={credentials}
+          signOut={signOut}
+        />
       </>
     );
     // }

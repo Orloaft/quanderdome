@@ -7,7 +7,7 @@ import { GameRoom } from "../GameRoom/GameRoom";
 
 import { ScoreBoard } from "../ScoreBoard/ScoreBoard";
 
-export const LobbyList = ({ credentials }) => {
+export const LobbyList = ({ credentials, signOut }) => {
   const [roomList, setRoomList] = useState([]);
   const [validateRoom, setValidateRoom] = useState("");
   const [scoreBoard, setScoreBoard] = useState(null);
@@ -88,6 +88,14 @@ export const LobbyList = ({ credentials }) => {
           <>
             <span className={styles.username}>
               Signed in as <span>{credentials}</span>
+              <button
+                className={styles.button}
+                onClick={() => {
+                  signOut();
+                }}
+              >
+                Sign Out
+              </button>
             </span>
             <form
               className={styles.join_lobby}
