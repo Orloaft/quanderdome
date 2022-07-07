@@ -261,32 +261,34 @@ async function startServer() {
     });
     socket.on("skip_question", (credentials, roomId) => {
       let room = roomInstances.find((room) => room.id === roomId);
-      let alivePlayers = room.scores.filter((player) => player.life > 0);
-      if (
-        !room.currentTrivia.playerWantSkip.find(
-          (player) => player === credentials
-        )
-      ) {
-        room.currentTrivia.playerWantSkip.push(credentials);
-      }
+      if (room) {
+        let alivePlayers = room.scores.filter((player) => player.life > 0);
+        if (
+          !room.currentTrivia.playerWantSkip.find(
+            (player) => player === credentials
+          )
+        ) {
+          room.currentTrivia.playerWantSkip.push(credentials);
+        }
 
-      if (room.currentTrivia.playerWantSkip.length === alivePlayers.length) {
-        room.roundCount += 1;
-        console.log("ending round");
-        room.currentTrivia.chosenAnswers = [];
-        room.currentTrivia.playerWantSkip = [];
-        if (room.trivia.length === room.roundCount) {
-          io.to(room.id).emit("game_end", room);
-          io.in(room.id).socketsLeave(room.id);
-          roomInstances = roomInstances.filter((room) => room.id !== roomId);
-        } else {
-          const shuffled = [
-            ...room.trivia[room.roundCount].incorrect_answers,
-            room.trivia[room.roundCount].correct_answer,
-          ].sort(() => Math.random() - 0.5);
-          room.currentTrivia.question = room.trivia[room.roundCount];
-          room.currentTrivia.options = shuffled;
-          io.to(room.id).emit("update_state_response", room);
+        if (room.currentTrivia.playerWantSkip.length === alivePlayers.length) {
+          room.roundCount += 1;
+          console.log("ending round");
+          room.currentTrivia.chosenAnswers = [];
+          room.currentTrivia.playerWantSkip = [];
+          if (room.trivia.length === room.roundCount) {
+            io.to(room.id).emit("game_end", room);
+            io.in(room.id).socketsLeave(room.id);
+            roomInstances = roomInstances.filter((room) => room.id !== roomId);
+          } else {
+            const shuffled = [
+              ...room.trivia[room.roundCount].incorrect_answers,
+              room.trivia[room.roundCount].correct_answer,
+            ].sort(() => Math.random() - 0.5);
+            room.currentTrivia.question = room.trivia[room.roundCount];
+            room.currentTrivia.options = shuffled;
+            io.to(room.id).emit("update_state_response", room);
+          }
         }
       }
     });
