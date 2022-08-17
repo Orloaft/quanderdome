@@ -8,6 +8,9 @@ export const CategorySelect = ({ handleChange, category }) => {
         name="category"
         value={category}
       >
+        <option style={{ color: "black" }} value="0">
+          Any
+        </option>
         <option style={{ color: "black" }} value="9">
           General Knowledge
         </option>

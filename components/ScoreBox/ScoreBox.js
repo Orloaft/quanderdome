@@ -2,6 +2,7 @@ import socketService from "../../services/socketService";
 import styles from "./ScoreBox.module.scss";
 export const ScoreBox = ({ credentials }) => {
   const { scores } = socketService.roomInstance;
+  let maxHealth = socketService.roomInstance.settings.lifeTotals;
   return (
     <div className={styles.score_box}>
       {scores
@@ -15,7 +16,7 @@ export const ScoreBox = ({ credentials }) => {
                 <div className={styles.health}>
                   <div
                     className={styles.health__progress}
-                    style={{ width: player.life + "%" }}
+                    style={{ width: (player.life * 100) / maxHealth + "%" }}
                   ></div>{" "}
                 </div>
               </div>

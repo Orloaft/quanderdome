@@ -35,14 +35,24 @@ export default function LoginPage({ logIn }) {
             }}
             className={styles.button}
           >
-            Sign in
+            Play as guest
           </button>
+          <a
+            href={`/api/auth/signin`}
+            className={styles.button}
+            onClick={(e) => {
+              e.preventDefault();
+              signIn();
+            }}
+          >
+            Sign in
+          </a>
         </form>
       </section>
     </div>
   );
   // } else {
-  //   //if session cat be fetched then render button for nextAuth sign in
+  //   //if session cant be fetched then render button for nextAuth sign in
   //   return (
   //     <div className={styles.container}>
   //       <section className={styles.login}>

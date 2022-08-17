@@ -70,7 +70,8 @@ async function startServer() {
           questions: 0,
           difficulty: "easy",
           time: "60",
-          category: 22,
+          category: 0,
+          lifeTotals: 100,
         },
         trivia: [],
         scores: [],
@@ -150,9 +151,9 @@ async function startServer() {
         roomInstances.find((room) => room.id === id)
       );
     });
-    socket.on("update_difficulty", (difficulty, id) => {
-      roomInstances.find((room) => room.id === id).settings.difficulty =
-        difficulty;
+    socket.on("update_lifeTotal", (lifeTotal, id) => {
+      roomInstances.find((room) => room.id === id).settings.lifeTotals =
+        lifeTotal;
       io.to(id).emit(
         "update_state_response",
         roomInstances.find((room) => room.id === id)
@@ -177,10 +178,11 @@ async function startServer() {
     socket.on("game_start", async (roomId) => {
       let room = roomInstances.find((room) => room.id === roomId);
       room.joinable = false;
-
+      let categoryQuery =
+        room.settings.category > 0 ? `&category=${room.settings.category}` : "";
       axios
         .get(
-          `https://opentdb.com/api.php?amount=${room.settings.questions}&category=${room.settings.category}&difficulty=${room.settings.difficulty}&type=multiple`
+          `https://opentdb.com/api.php?amount=${room.settings.questions}${categoryQuery}&type=multiple`
         )
         .then((result) => {
           console.log(result.data);
@@ -188,7 +190,7 @@ async function startServer() {
             console.log("games started in room: " + room.name);
             room.trivia = result.data.results;
             room.scores = room.players.map((player) => {
-              return { name: player, score: 0, life: 100 };
+              return { name: player, score: 0, life: room.settings.lifeTotals };
             });
             let newRound = {
               question: room.trivia[0],

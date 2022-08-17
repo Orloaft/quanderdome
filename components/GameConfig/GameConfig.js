@@ -1,14 +1,13 @@
 import styles from "./GameConfig.module.scss";
 import { CategorySelect } from "../CategorySelect/CategorySelect";
-import { DifficultySelect } from "../DifficultySelect/DifficultySelect";
-import { useState } from "react";
+import { LifeTotalSelect } from "../LifeTotalSelect/LifeTotalSelect";
 import socketService from "../../services/socketService";
 
 export const GameConfig = ({ gameStart }) => {
-  const handleDifficultyChange = (e) => {
+  const handleLifeTotalChange = (e) => {
     e.preventDefault();
     socketService.socket.emit(
-      "update_difficulty",
+      "update_lifeTotal",
       e.target.value,
       socketService.roomInstance.id
     );
@@ -88,15 +87,17 @@ export const GameConfig = ({ gameStart }) => {
             name="range"
             type="range"
             min="1"
-            max="30"
+            max={settings.category > 0 ? `30` : `50`}
           ></input>
+          Category:
           <CategorySelect
             handleChange={handleCategoryChange}
             category={settings.category}
           />
-          <DifficultySelect
-            handleChange={handleDifficultyChange}
-            difficulty={settings.difficulty}
+          Life totals:
+          <LifeTotalSelect
+            handleChange={handleLifeTotalChange}
+            lifeTotals={settings.lifeTotals}
           />
           <form id="skip" className="toggle-form toggle-form--skip" action="#">
             <label htmlFor="skip">
@@ -114,7 +115,6 @@ export const GameConfig = ({ gameStart }) => {
               <span className="slider"></span>
             </label>
           </form>
-
           <button className={styles.button} type="submit" disabled={false}>
             Start game
           </button>
