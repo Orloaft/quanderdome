@@ -6,7 +6,15 @@ export const HealthBar = ({ health }) => {
   let maxHealth = socketService.roomInstance.settings.lifeTotals;
   return (
     <div className={styles.health}>
-      <span style={{ position: "absolute" }}>{health}</span>
+      <span
+        style={{
+          position: "absolute",
+          fontSize: "2rem",
+          color: "var(--border-color)",
+        }}
+      >
+        {health}
+      </span>
       <div
         className={styles.health__progress}
         style={{ width: (health * 100) / maxHealth + "%" }}

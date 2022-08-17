@@ -13,6 +13,7 @@ export const ScoreBoard = ({ game, handleLeave }) => {
                   {player.name}:
                 </li>
                 <li key={uuidv4()}>{player.score} points</li>
+                <li key={uuidv4()}>{player.life} life remaining</li>
               </>
             );
           })}
