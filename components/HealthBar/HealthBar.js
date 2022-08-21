@@ -1,5 +1,4 @@
 import styles from "./HealthBar.module.scss";
-import { useEffect, useState } from "react";
 import socketService from "../../services/socketService";
 
 export const HealthBar = ({ health }) => {

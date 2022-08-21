@@ -32,6 +32,7 @@
     "sequelize": "^6.19.0",
     "socket.io": "^4.5.1",
     "socket.io-client": "^4.5.1",
+    "sql.js": "^1.7.0",
     "sqlite3": "^5.0.8",
     "uuidv4": "^6.2.13"
   },

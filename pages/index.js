@@ -19,6 +19,7 @@ export default function Home() {
     }
   };
   const signOut = () => {
+    window.localStorage.removeItem("username");
     setCredentials(false);
   };
   //on initial render if temporary usernme is stored then set the state variable and render dashboard
