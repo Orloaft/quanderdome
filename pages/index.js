@@ -21,7 +21,7 @@ export default function Home() {
   return (
     <UserContext.Provider value={{ user: credentials, setCredentials }}>
       <ThemeProvider>
-        {(credentials.user && <Dashboard />) || <MainMenu />}
+        {(credentials.username && <Dashboard />) || <MainMenu />}
       </ThemeProvider>
     </UserContext.Provider>
   );
