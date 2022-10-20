@@ -6,7 +6,7 @@ import axios from "axios";
 
 export const UserContext = createContext();
 export default function Home() {
-  const [credentials, setCredentials] = useState(false);
+  const [credentials, setCredentials] = useState({ username: "" });
 
   //on initial render if temporary usernme is stored then set the state variable and render dashboard
   useEffect(() => {
