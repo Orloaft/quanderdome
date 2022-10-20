@@ -4,7 +4,7 @@ import axios from "axios";
 import styles from "../../styles/LogInPage.module.scss";
 import { useState } from "react";
 import { Particles } from "../../components/Particles/Particles";
-export default function confirmEmailPage() {
+export default function ConfirmEmailPage() {
   const [message, setMessage] = useState(null);
   const router = useRouter();
   const { token } = router.query;
