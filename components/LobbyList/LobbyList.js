@@ -91,7 +91,8 @@ export const LobbyList = () => {
         (!roomInstance.id && ( //if no room id exist, render lobby form and list
           <>
             <span className={styles.username}>
-              Signed in as <span>{userContext.user.username}</span>
+              Signed in as{" "}
+              <span>{userContext && userContext.user.username}</span>
               <button className={styles.button} onClick={signOut}>
                 Sign Out
               </button>
