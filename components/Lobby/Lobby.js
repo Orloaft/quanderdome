@@ -24,7 +24,7 @@ export const Lobby = ({ leaveLobby, gameStart }) => {
   useEffect(() => {
     socketService.socket.on("room_message_received", (msg) => {
       let updatedChat = [...chat];
-      updatedChat.unshift(msg);
+      updatedChat.push(msg);
       setChat(updatedChat);
     });
   });

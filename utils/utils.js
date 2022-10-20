@@ -7,3 +7,10 @@ export const validateSignUp = (form) => {
     return "";
   }
 };
+export const validateRoom = (name) => {
+  if (name.length < 5 || name.length > 10) {
+    return "room name should be 5-10 characters";
+  } else {
+    return "";
+  }
+};

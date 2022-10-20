@@ -6,10 +6,10 @@ import { Lobby } from "../Lobby/Lobby";
 import { GameRoom } from "../GameRoom/GameRoom";
 import { ScoreBoard } from "../ScoreBoard/ScoreBoard";
 import { UserContext } from "../../pages";
-
+import { validateRoom } from "../../utils/utils";
 export const LobbyList = () => {
   const [roomList, setRoomList] = useState([]);
-  const [validateRoom, setValidateRoom] = useState("");
+  const [message, setMessage] = useState("");
   const [scoreBoard, setScoreBoard] = useState(null);
   const [roomInstance, setRoomInstance] = useState({});
   const userContext = useContext(UserContext);
@@ -35,7 +35,8 @@ export const LobbyList = () => {
   }
   async function createRoom(e) {
     e.preventDefault();
-    if (e.target.roomInput.value) {
+    !e.target.roomInput.value && setMessage("please enter room name");
+    if (!validateRoom(e.target.roomInput.value).length) {
       socketService.socket.emit(
         "create_room",
         e.target.roomInput.value,
@@ -43,7 +44,7 @@ export const LobbyList = () => {
         socketService.socket.id
       );
     } else {
-      setValidateRoom("please enter room name");
+      setMessage(validateRoom(e.target.roomInput.value));
     }
   }
   const leaveScoreBoard = () => {
@@ -109,9 +110,9 @@ export const LobbyList = () => {
                 type="text"
                 name="roomInput"
                 autoComplete="off"
-                onChange={() => setValidateRoom("")}
+                onChange={() => setMessage("")}
               ></input>
-              {validateRoom}
+              {message}
               <button className={styles.button} type="submit">
                 Create
               </button>
