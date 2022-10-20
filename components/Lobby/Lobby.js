@@ -1,9 +1,11 @@
 import styles from "./Lobby.module.scss";
 import socketService from "../../services/socketService";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { GameConfig } from "../GameConfig/GameConfig";
-export const Lobby = ({ leaveLobby, gameStart, credentials }) => {
+import { UserContext } from "../../pages";
+export const Lobby = ({ leaveLobby, gameStart }) => {
+  const userContext = useContext(UserContext);
   const [chat, setChat] = useState([]);
   const { roomInstance } = socketService;
   async function messageSubmit(e) {
@@ -12,7 +14,7 @@ export const Lobby = ({ leaveLobby, gameStart, credentials }) => {
     return new Promise((rs, rj) => {
       socketService.socket.emit("room_message", roomInstance.id, {
         body: e.target.message.value,
-        id: credentials,
+        id: userContext.user.username,
       });
       rs();
     }).then(() => {

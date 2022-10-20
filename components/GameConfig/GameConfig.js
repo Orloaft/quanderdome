@@ -99,7 +99,7 @@ export const GameConfig = ({ gameStart }) => {
             handleChange={handleLifeTotalChange}
             lifeTotals={settings.lifeTotals}
           />
-          <form id="skip" className="toggle-form toggle-form--skip" action="#">
+          <div id="skip" className="toggle-form toggle-form--skip" action="#">
             <label htmlFor="skip">
               {(socketService.roomInstance.settings.canSkip && `Allow skips`) ||
                 `No skipping`}
@@ -114,7 +114,7 @@ export const GameConfig = ({ gameStart }) => {
               />
               <span className="slider"></span>
             </label>
-          </form>
+          </div>
           <button className={styles.button} type="submit" disabled={false}>
             Start game
           </button>

@@ -1,25 +1,30 @@
 import styles from "./LobbyList.module.scss";
 import socketService from "../../services/socketService";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Lobby } from "../Lobby/Lobby";
 import { GameRoom } from "../GameRoom/GameRoom";
-
 import { ScoreBoard } from "../ScoreBoard/ScoreBoard";
+import { UserContext } from "../../pages";
 
-export const LobbyList = ({ credentials, signOut }) => {
+export const LobbyList = () => {
   const [roomList, setRoomList] = useState([]);
   const [validateRoom, setValidateRoom] = useState("");
   const [scoreBoard, setScoreBoard] = useState(null);
   const [roomInstance, setRoomInstance] = useState({});
+  const userContext = useContext(UserContext);
   function gameStart() {
     socketService.socket.emit("game_start", socketService.roomInstance.id);
   }
+  const signOut = () => {
+    localStorage.removeItem("username");
+    userContext.setCredentials(null);
+  };
   const leaveLobby = () => {
     socketService.socket.emit(
       "leave_room",
       socketService.room,
-      credentials,
+      userContext.user.username,
       socketService.socket.id
     );
   };
@@ -34,7 +39,7 @@ export const LobbyList = ({ credentials, signOut }) => {
       socketService.socket.emit(
         "create_room",
         e.target.roomInput.value,
-        credentials,
+        userContext.user.username,
         socketService.socket.id
       );
     } else {
@@ -81,22 +86,13 @@ export const LobbyList = ({ credentials, signOut }) => {
   return (
     <>
       {scoreBoard ? (
-        <ScoreBoard
-          handleLeave={leaveScoreBoard}
-          game={scoreBoard}
-          credentials={credentials}
-        /> //display scoreboard when returning from game
+        <ScoreBoard handleLeave={leaveScoreBoard} game={scoreBoard} /> //display scoreboard when returning from game
       ) : (
         (!roomInstance.id && ( //if no room id exist, render lobby form and list
           <>
             <span className={styles.username}>
-              Signed in as <span>{credentials}</span>
-              <button
-                className={styles.button}
-                onClick={() => {
-                  signOut();
-                }}
-              >
+              Signed in as <span>{userContext.user.username}</span>
+              <button className={styles.button} onClick={signOut}>
                 Sign Out
               </button>
             </span>
@@ -131,7 +127,7 @@ export const LobbyList = ({ credentials, signOut }) => {
                           socketService.joinGameRoom(
                             socketService.socket,
                             room.id,
-                            credentials
+                            userContext.user.username
                           );
                         }
                       }}
@@ -155,13 +151,9 @@ export const LobbyList = ({ credentials, signOut }) => {
           </>
         )) ||
         (roomInstance.currentTrivia.question ? ( //render lobby if question was not provided by server
-          <GameRoom leaveLobby={leaveLobby} credentials={credentials} />
+          <GameRoom leaveLobby={leaveLobby} />
         ) : (
-          <Lobby
-            gameStart={gameStart}
-            credentials={credentials}
-            leaveLobby={leaveLobby}
-          />
+          <Lobby gameStart={gameStart} leaveLobby={leaveLobby} />
         ))
       )}
     </>

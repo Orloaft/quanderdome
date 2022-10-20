@@ -1,9 +1,13 @@
 import styles from "../GameRoom/GameRoom.module.scss";
 import { v4 as uuidv4 } from "uuid";
 import socketService from "../../services/socketService";
-import { useEffect, useState } from "react";
+import { useEffect, useContext } from "react";
 import he from "he";
-export const QuestionComponent = ({ submitAnswer, credentials }) => {
+import { UserContext } from "../../pages";
+
+export const QuestionComponent = ({ submitAnswer }) => {
+  const userContext = useContext(UserContext);
+  const { username } = userContext.user;
   //function to remove special characters (noSpecialCharacters)
   const nsc = (str) => {
     return he.decode(str);
@@ -11,7 +15,7 @@ export const QuestionComponent = ({ submitAnswer, credentials }) => {
   let isEliminated = () => {
     if (
       socketService.roomInstance.scores.find(
-        (player) => player.name === credentials
+        (player) => player.name === username
       ).life <= 0
     ) {
       return true;
@@ -56,7 +60,7 @@ export const QuestionComponent = ({ submitAnswer, credentials }) => {
               e.preventDefault();
               socketService.socket.emit(
                 "skip_question",
-                credentials,
+                username,
                 socketService.roomInstance.id
               );
             }}

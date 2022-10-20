@@ -5,15 +5,14 @@
 .container {
   position: relative;
   font-family: odibee;
-  height: 100vh;
+  height: 200vh;
   display: flex;
   flex-direction: column;
-  padding-top: 10%;
+  justify-content: flex-start;
   align-items: center;
   background-color: var(--primary-background);
   @include tablet {
-    justify-content: center;
-    padding-top: 0;
+    height: 100vh;
   }
 }
 .login {
