@@ -7,6 +7,8 @@ import { GameRoom } from "../GameRoom/GameRoom";
 import { ScoreBoard } from "../ScoreBoard/ScoreBoard";
 import { UserContext } from "../../pages";
 import { validateRoom } from "../../utils/utils";
+import Link from "next/link";
+
 export const LobbyList = () => {
   const [roomList, setRoomList] = useState([]);
   const [message, setMessage] = useState("");
@@ -93,9 +95,16 @@ export const LobbyList = () => {
           <>
             <span className={styles.username}>
               Signed in as{" "}
-              <span>{userContext && userContext.user.username}</span>
+              <span style={{ marginLeft: ".5rem" }}>
+                {userContext && userContext.user.username}
+              </span>
               <button className={styles.button} onClick={signOut}>
                 Sign Out
+              </button>
+              <button className={styles.button}>
+                <Link href="/user" className={styles.link}>
+                  Account
+                </Link>
               </button>
             </span>
             <form

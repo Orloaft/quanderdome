@@ -24,7 +24,7 @@ async function createDb() {
   `);
     await db.query(sql`
   CREATE TABLE IF NOT EXISTS games (
-    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    id VARCHAR NOT NULL PRIMARY KEY ,
     data VARCHAR
   );
 `);

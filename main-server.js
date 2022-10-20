@@ -4,11 +4,29 @@ const next = require("next");
 let roomInstances = [];
 const axios = require("axios");
 const { uuid } = require("uuidv4");
+const knex = require("knex")({
+  client: "sqlite3",
+  connection: {
+    filename: "./data.sqlite3",
+  },
+});
+function storeGameResult(game) {
+  console.log("making store query");
+  knex("games")
+    .select()
+    .where({ id: game.id })
+    .then((games) => {
+      if (games[0]) {
+        return;
+      } else {
+        knex("games")
+          .insert({ id: game.id, data: JSON.stringify(game) })
+          .then((res) => console.log(res))
+          .catch((err) => console.log(err));
+      }
+    });
+}
 
-//returns room instance that matches a roomId
-const fetchRoomInstance = (roomId) => {
-  return roomInstances.find((instance) => instance.name === roomId);
-};
 // function that allows next.js to handle the server side code
 async function startServer() {
   const nextJsApp = next({ dev: false, conf: { reactStrictMode: true } });
@@ -35,6 +53,7 @@ async function startServer() {
       io.to(room.id).emit("update_state_response", room);
       if (!room.scores.find((player) => player.life > 0)) {
         io.to(room.id).emit("game_end", room);
+        storeGameResult(room);
         roomInstances = roomInstances.filter((room) => room.id !== roomId);
         clearInterval(x);
       }
@@ -44,6 +63,7 @@ async function startServer() {
       // If the count down is finished, end the game
       if (distance <= 0) {
         io.to(room.id).emit("game_end", room);
+        storeGameResult(room);
         roomInstances = roomInstances.filter((room) => room.id !== room.id);
         clearInterval(x);
       }
@@ -129,6 +149,7 @@ async function startServer() {
           (player) => player !== credentials
         );
         if (exitedRoom.players.length === 0) {
+          storeGameResult(exitedRoom);
           roomInstances = roomInstances.filter((room) => room.id !== roomId);
           io.emit("show_rooms_response", roomInstances);
         } else {
@@ -236,6 +257,7 @@ async function startServer() {
           if (game.trivia.length === game.roundCount) {
             io.to(game.id).emit("game_end", game);
             io.in(game.id).socketsLeave(game.id);
+            storeGameResult(game);
             roomInstances = roomInstances.filter((room) => room.id !== roomId);
           } else {
             console.log("ending round");
@@ -282,6 +304,7 @@ async function startServer() {
           if (room.trivia.length === room.roundCount) {
             io.to(room.id).emit("game_end", room);
             io.in(room.id).socketsLeave(room.id);
+            storeGameResult(room);
             roomInstances = roomInstances.filter((room) => room.id !== roomId);
           } else {
             const shuffled = [
