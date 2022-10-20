@@ -9,9 +9,11 @@ export const LogIn = () => {
   const userContext = useContext(UserContext);
   const handleSubmit = (e) => {
     e.preventDefault();
+
     axios
       .post(`api/login`, form)
       .then((res) => {
+        setForm({ email: "", password: "" });
         res.data.message && setMessage(res.data.message);
         if (res.data.token) {
           sessionStorage.setItem("authToken", res.data.token);

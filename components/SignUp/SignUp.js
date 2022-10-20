@@ -1,17 +1,21 @@
 import styles from "../../styles/LogInPage.module.scss";
 import { useState } from "react";
 import axios from "axios";
+import { validateSignUp } from "../../utils/utils";
 export const SignUp = () => {
   const [form, setForm] = useState({ email: "", username: "", password: "" });
   const [message, setMessage] = useState(null);
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios
-      .post(`api/signup`, form)
-      .then((res) => {
-        res.data.message && setMessage(res.data.message);
-      })
-      .catch((err) => console.log(err));
+    setMessage(validateSignUp(form));
+    if (!validateSignUp(form)) {
+      axios
+        .post(`api/signup`, form)
+        .then((res) => {
+          res.data.message && setMessage(res.data.message);
+        })
+        .catch((err) => console.log(err));
+    }
   };
   const handleFormChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });

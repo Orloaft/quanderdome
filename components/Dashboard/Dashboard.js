@@ -1,6 +1,6 @@
-import styles from "../styles/Dashboard.module.scss";
-import { LobbyList } from "../components/LobbyList/LobbyList";
-import { Particles } from "../components/Particles/Particles";
+import styles from "../../styles/Dashboard.module.scss";
+import { LobbyList } from "../LobbyList/LobbyList";
+import { Particles } from "../Particles/Particles";
 
 // Main game dashboard for displaying username , lobby creation form and lobby list
 export default function Dashboard() {

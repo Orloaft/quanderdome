@@ -1,5 +1,5 @@
 import { MainMenu } from "../components/MainMenu/MainMenu";
-import Dashboard from "./Dashboard";
+import Dashboard from "../components/Dashboard/Dashboard";
 import { useEffect, useState, createContext } from "react";
 import { ThemeProvider } from "../components/ThemeProvider/ThemeProvider";
 import axios from "axios";
