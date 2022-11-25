@@ -20,7 +20,7 @@ export const LobbyList = () => {
   }
   const signOut = () => {
     localStorage.removeItem("username");
-    userContext.setCredentials(null);
+    userContext.setCredentials({});
   };
   const leaveLobby = () => {
     socketService.socket.emit(
